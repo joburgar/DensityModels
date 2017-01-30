@@ -1,0 +1,387 @@
+#############################################################
+# BB_JAGS.R
+# Chapter 18 of SCR book
+# created by Joanna Burgar, 25-Jan-2017
+# script for estimating density of unmarked populations using JAGS without latent encounter histories
+#############################################################
+library(snowfall)
+library(scrbook)
+
+###--- set directory and load files
+setwd("C://Users/JBurgar/Documents/R/Analysis/DensityEstimation/BorealDeerProject/")
+DayLookup <- read.csv("StudyDays.csv")
+BlkBearMatrix <- read.csv("BBMatrix.csv",header=T, row.names=1) ## import the BlkBear matrix (created in SpatialCountDensity_JBv2.R)
+CamXY <- read.csv("CamXY.csv",row.names=1)
+
+###--- Black Bear 2012 sampling occassion with most detections
+## source BBMatrix directlyl from R script?
+
+sum(BlkBearMatrix[,259:351],na.rm=T)  #157 - 2012 detections between 6-Jul and 6-Oct
+BlkBear2012 <- BlkBearMatrix[,259:351]
+BB2012 <- BlkBear2012[apply(BlkBear2012,1,function(x)!any(is.na(x))), , drop=F]
+sum(is.na(BB2012)) # no NAs
+sum(BB2012) # 157 detections
+dim(BB2012) # 59 93
+complete.cases(BlkBearMatrix[,259:351]) ## rows 32,55,62
+62-3 #59 cameras
+
+n <- as.matrix(BB2012)
+
+###---- camera station coordinates
+summary(CamXY)
+
+# specify how much to buffer sites by (in 10km units, according to coord.scale)
+coord.scale <- 10000
+buffer <- 1 # 10 km unit buffer
+
+traplocs <- as.matrix(CamXY[, 2:3])           # 62 camera locations in this matrix
+X <- traplocs/coord.scale                     # 62 trap coords in 10 km units
+X=X[-62,]
+X=X[-55,]
+X=X[-32,]
+dim(X)
+
+###--- create xlims and ylims
+Xl <- min(X[, 1] - buffer)
+Xu <- max(X[, 1] + buffer)
+
+Yl <- min(X[, 2] - buffer)
+Yu <- max(X[, 2] + buffer)
+xlims <- c(Xl,Xu); ylims <- c(Yl,Yu)  
+
+area <- (Xu - Xl) * (Yu - Yl) # this is in units of 10 km * 10 km
+areakm2 <- (Xu - Xl)*(Yu - Yl)*100
+areakm2
+
+###--- create xlims and ylims of scaled coordinates
+## page 155 of SCR book "While the scaling of the coordinate system is theoretically irrelevant,
+## a poorly scaled coordinate system can produce Markov chains that mix poorly."
+X.scaled <- X[,1]-47.6222
+
+Xl.scaled <- min(X.scaled - buffer)
+Xu.scaled <- max(X.scaled + buffer)
+
+Y.scaled <- X[,2]-612.3345
+Yl.scaled <- min(Y.scaled - buffer)
+Yu.scaled <- max(Y.scaled + buffer)
+xlims.scaled <- c(Xl.scaled,Xu.scaled); ylims.scaled <- c(Yl.scaled,Yu.scaled)  
+
+areakm2.scaled <- (Xu.scaled - Xl.scaled)*(Yu.scaled - Yl.scaled)*100
+
+X2 <- as.matrix(cbind(X.scaled,Y.scaled))
+dim(X2) # scaled traploc matrix in 10 km units
+
+###--- remaining model parameters
+
+# specify parameters to monitor
+pars1 <- c("sigma","lam0","psi","N")
+
+# initial values
+init1 <-  function() {  list(sigma=rnorm(1,50), lam0=runif(1) , z=rep(1,dat1$M)) } 
+init2 <-  function() {  list(sigma=rnorm(1,100), lam0=runif(1) , z=rep(1,dat1$M)) }
+init3 <-  function() {  list(sigma=rnorm(1,10), lam0=runif(1) , z=rep(1,dat1$M)) } #init1 in JAGS model Cole is running
+
+dat1 <- list(n=n, X=X2, M=1000, J=nrow(n), K=ncol(n), xlim=xlims.scaled, ylim=ylims.scaled)
+
+###--- specify prior 1
+cat("
+    model {
+    sigma ~ dunif(0,100)
+    lam0 ~ dunif(0,10)
+    psi ~ dbeta(1,1)
+    for(i in 1:M) {
+    z[i] ~ dbern(psi)
+    s[i,1] ~ dunif(xlim[1], xlim[2])
+    s[i,2] ~ dunif(ylim[1], ylim[2])
+    for(j in 1:J) {
+    distsq[i,j] <- (s[i,1] - X[j,1])^2 + (s[i,2] - X[j,2])^2
+    lam[i,j] <- lam0 * exp(-distsq[i,j] / (2*sigma^2)) * z[i]
+    }
+    }
+    for(j in 1:J) {
+    bigLambda[j] <- sum(lam[,j])
+    for(k in 1:K) {
+    n[j,k] ~ dpois(bigLambda[j])
+    }
+    }
+    N <- sum(z[])
+    }
+    ",file="BB1J.txt")
+
+###--- specify prior 2
+cat("
+    model {
+    sigma ~ dgamma(0.001,0.001)
+    lam0 ~ dunif(0,10)
+    psi ~ dbeta(1,1)
+    for(i in 1:M) {
+    z[i] ~ dbern(psi)
+    s[i,1] ~ dunif(xlim[1], xlim[2])
+    s[i,2] ~ dunif(ylim[1], ylim[2])
+    for(j in 1:J) {
+    distsq[i,j] <- (s[i,1] - X[j,1])^2 + (s[i,2] - X[j,2])^2
+    lam[i,j] <- lam0 * exp(-distsq[i,j] / (2*sigma^2)) * z[i]
+    }
+    }
+    for(j in 1:J) {
+    bigLambda[j] <- sum(lam[,j])
+    for(k in 1:K) {
+    n[j,k] ~ dpois(bigLambda[j])
+    }
+    }
+    N <- sum(z[])
+    }
+    ",file="BB2J.txt")
+
+
+###--- specify prior 3
+cat("
+    model {
+    sigma ~ dgamma(10,70) # species hra specific
+    lam0 ~ dunif(0,10)
+    psi ~ dbeta(1,1)
+    for(i in 1:M) {
+    z[i] ~ dbern(psi)
+    s[i,1] ~ dunif(xlim[1], xlim[2])
+    s[i,2] ~ dunif(ylim[1], ylim[2])
+    for(j in 1:J) {
+    distsq[i,j] <- (s[i,1] - X[j,1])^2 + (s[i,2] - X[j,2])^2
+    lam[i,j] <- lam0 * exp(-distsq[i,j] / (2*sigma^2)) * z[i]
+    }
+    }
+    for(j in 1:J) {
+    bigLambda[j] <- sum(lam[,j])
+    for(k in 1:K) {
+    n[j,k] ~ dpois(bigLambda[j])
+    }
+    }
+    N <- sum(z[])
+    }
+    ",file="BB3J.txt")
+
+
+###--- execute 1st model
+library(rjags)
+library(coda)
+library(parallel)
+
+(start.time <- Sys.time())
+
+cl3 <- makeCluster(3)
+clusterExport(cl3, c("dat1","init1","pars1"))
+BB11J <- clusterEvalQ(cl3, {
+  library(rjags)
+  BB11Jm <- jags.model("BB1J.txt", data=dat1, inits=init1,
+                    n.chains=1, n.adapt=1000)
+  BB11Jc <- coda.samples(BB11Jm, pars1, n.iter=150000)
+  return(as.mcmc(BB11Jc))
+})
+
+BBout11JL <- mcmc.list(BB11J)
+(end.time <- Sys.time())
+BBout11JL.ET <- difftime(end.time, start.time, units='hours')
+
+save("BBout11JL.ET",file="BBout11JL.ET.RData")
+save("BBout11JL",file="BBout11JL.RData")
+
+###--- execute 2nd model
+library(rjags)
+library(coda)
+library(parallel)
+
+(start.time <- Sys.time())
+
+cl3 <- makeCluster(3)
+clusterExport(cl3, c("dat1","init1","pars1"))
+BB12J <- clusterEvalQ(cl3, {
+  library(rjags)
+  BB12Jm <- jags.model("BB2J.txt", data=dat1, inits=init1,
+                    n.chains=1, n.adapt=1000)
+  BB12Jc <- coda.samples(BB12Jm, pars1, n.iter=150000)
+  return(as.mcmc(BB12Jc))
+})
+
+BBout12JL <- mcmc.list(BB12J)
+(end.time <- Sys.time())
+BBout12JL.ET <- difftime(end.time, start.time, units='hours')
+
+save("BBout12JL.ET",file="BBout12JL.ET.RData")
+save("BBout12JL",file="BBout12JL.RData")
+
+###--- execute 3rd model
+library(rjags)
+library(coda)
+library(parallel)
+
+(start.time <- Sys.time())
+
+cl3 <- makeCluster(3)
+clusterExport(cl3, c("dat1","init1","pars1"))
+BB13J <- clusterEvalQ(cl3, {
+  library(rjags)
+  BB13Jm <- jags.model("BB3J.txt", data=dat1, inits=init1,
+                    n.chains=1, n.adapt=1000)
+  BB13Jc <- coda.samples(BB13Jm, pars1, n.iter=150000)
+  return(as.mcmc(BB13Jc))
+})
+
+BBout13JL <- mcmc.list(BB13J)
+(end.time <- Sys.time())
+BBout13JL.ET <- difftime(end.time, start.time, units='hours')
+
+save("BBout13JL.ET",file="BBout13JL.ET.RData")
+save("BBout13JL",file="BBout13JL.RData")
+
+###--- execute 4th model
+library(rjags)
+library(coda)
+library(parallel)
+
+(start.time <- Sys.time())
+
+cl3 <- makeCluster(3)
+clusterExport(cl3, c("dat1","init2","pars1"))
+BB21J <- clusterEvalQ(cl3, {
+  library(rjags)
+  BB21Jm <- jags.model("BB1J.txt", data=dat1, inits=init2,
+                    n.chains=1, n.adapt=1000)
+  BB21Jc <- coda.samples(BB21Jm, pars1, n.iter=150000)
+  return(as.mcmc(BB21Jc))
+})
+
+BBout21JL <- mcmc.list(BB21J)
+(end.time <- Sys.time())
+BBout21JL.ET <- difftime(end.time, start.time, units='hours')
+
+save("BBout21JL.ET",file="BBout21JL.ET.RData")
+save("BBout21JL",file="BBout21JL.RData")
+
+
+###--- execute 5th model
+library(rjags)
+library(coda)
+library(parallel)
+
+(start.time <- Sys.time())
+
+cl3 <- makeCluster(3)
+clusterExport(cl3, c("dat1","init2","pars1"))
+BB22J <- clusterEvalQ(cl3, {
+  library(rjags)
+  BB22Jm <- jags.model("BB2J.txt", data=dat1, inits=init2,
+                    n.chains=1, n.adapt=1000)
+  BB22Jc <- coda.samples(BB22Jm, pars1, n.iter=150000)
+  return(as.mcmc(BB22Jc))
+})
+
+BBout22JL <- mcmc.list(BB22J)
+(end.time <- Sys.time())
+BBout22JL.ET <- difftime(end.time, start.time, units='hours')
+
+save("BBout22JL.ET",file="BBout22JL.ET.RData")
+save("BBout22JL",file="BBout22JL.RData")
+
+
+###--- execute 6th model
+library(rjags)
+library(coda)
+library(parallel)
+
+(start.time <- Sys.time())
+
+cl3 <- makeCluster(3)
+clusterExport(cl3, c("dat1","init2","pars1"))
+BB23J <- clusterEvalQ(cl3, {
+  library(rjags)
+  BB23Jm <- jags.model("BB3J.txt", data=dat1, inits=init2,
+                    n.chains=1, n.adapt=1000)
+  BB23Jc <- coda.samples(BB23Jm, pars1, n.iter=150000)
+  return(as.mcmc(BB23Jc))
+})
+
+BBout23JL <- mcmc.list(BB23J)
+(end.time <- Sys.time())
+BBout23JL.ET <- difftime(end.time, start.time, units='hours')
+
+save("BBout23JL.ET",file="BBout23JL.ET.RData")
+save("BBout23JL",file="BBout23JL.RData")
+
+
+###--- execute 7th model
+library(rjags)
+library(coda)
+library(parallel)
+
+(start.time <- Sys.time())
+
+cl3 <- makeCluster(3)
+clusterExport(cl3, c("dat1","init3","pars1"))
+BB31J <- clusterEvalQ(cl3, {
+  library(rjags)
+  BB31Jm <- jags.model("BB1J.txt", data=dat1, inits=init3,
+                    n.chains=1, n.adapt=1000)
+  BB31Jc <- coda.samples(BB31Jm, pars1, n.iter=150000)
+  return(as.mcmc(BB31Jc))
+})
+
+BBout31JL <- mcmc.list(BB31J)
+(end.time <- Sys.time())
+BBout31JL.ET <- difftime(end.time, start.time, units='hours')
+
+save("BBout31JL.ET",file="BBout31JL.ET.RData")
+save("BBout31JL",file="BBout31JL.RData")
+
+###--- execute 8th model
+library(rjags)
+library(coda)
+library(parallel)
+
+(start.time <- Sys.time())
+
+cl3 <- makeCluster(3)
+clusterExport(cl3, c("dat1","init3","pars1"))
+BB32J <- clusterEvalQ(cl3, {
+  library(rjags)
+  BB32Jm <- jags.model("BB2J.txt", data=dat1, inits=init3,
+                    n.chains=1, n.adapt=1000)
+  BB32Jc <- coda.samples(BB32Jm, pars1, n.iter=150000)
+  return(as.mcmc(BB32Jc))
+})
+
+BBout32JL <- mcmc.list(BB32J)
+(end.time <- Sys.time())
+BBout32JL.ET <- difftime(end.time, start.time, units='hours')
+
+save("BBout32JL.ET",file="BBout32JL.ET.RData")
+save("BBout32JL",file="BBout32JL.RData")
+
+###--- execute 7th model
+library(rjags)
+library(coda)
+library(parallel)
+
+(start.time <- Sys.time())
+
+cl3 <- makeCluster(3)
+clusterExport(cl3, c("dat1","init3","pars1"))
+BB33J <- clusterEvalQ(cl3, {
+  library(rjags)
+  BB33Jm <- jags.model("BB3J.txt", data=dat1, inits=init3,
+                    n.chains=1, n.adapt=1000)
+  BB33Jc <- coda.samples(BB33Jm, pars1, n.iter=150000)
+  return(as.mcmc(BB33Jc))
+})
+
+BBout33JL <- mcmc.list(BB33J)
+(end.time <- Sys.time())
+BBout33JL.ET <- difftime(end.time, start.time, units='hours')
+
+save("BBout33JL.ET",file="BBout33JL.ET.RData")
+save("BBout33JL",file="BBout33JL.RData")
+
+
+
+
+
+
+
