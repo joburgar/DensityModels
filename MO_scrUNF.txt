@@ -8,30 +8,29 @@ library(snowfall)
 library(scrbook)
 
 ###--- set directory and load files
-setwd("C://Users/JBurgar/Documents/R/Analysis/DensityEstimation/BorealDeerProject/")
+setwd("C://Users/JBurgar/Documents/R/Analysis/DensityEstimation/BorealDeerProject/DensityModels/")
 DayLookup <- read.csv("StudyDays.csv")
 CamXY <- read.csv("CamXY.csv",row.names=1)
 
-###--- Moose 2012 sampling ocMOssion with most detections
+###--- Moose 2012 sampling occassion with most detections
 MooseMatrix <- read.csv("Moose_Matrix.csv",header=T, row.names=1) ## import the Moose matrix (created in SpatialCountDensity_JBv2.R)
 
-Moose2012 <- MooseMatrix[,217:309] ## maximum detections for 3 month snow-free 2012 sampling period - see Species_Detections.R for details
-
+Moose2012 <- MooseMatrix[,217:309]
 
 MO2012 <- Moose2012[apply(Moose2012,1,function(x)!any(is.na(x))), , drop=F]
 sum(is.na(MO2012)) # no NAs
 sum(MO2012) # 20 detections
 dim(MO2012) # 58 93
 complete.cases(MooseMatrix[,217:309]) ## rows 32,55, 58,62
-62-4 #58 cameras
+62-4 #59 cameras
+plot(apply(MO2012,2,function(x) sum(x)), xlab= "Study Day", ylab= "DaiMO Detections",cex.lab=1.4)
 
-
-## 2012 best Moose detections for 3 months summer ("snow-free"), during RAP, Study days 217:309;
+## 2012 best Moose detections for 3 months summer ("snow-free") Study days 217:309;
 
 n <- as.matrix(MO2012)
 
 
-###---- MOmera station coordinates
+###---- camera station coordinates
 summary(CamXY)
 
 # specify how much to buffer sites by (in 10km units, according to coord.scale)
