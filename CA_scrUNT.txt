@@ -13,7 +13,7 @@ DayLookup <- read.csv("StudyDays.csv")
 CamXY <- read.csv("CamXY.csv",row.names=1)
 
 ###--- Caribou 2012 sampling occassion with most detections
-CaribouMatrix <- read.csv("Caribou_Matrix.csv",header=T, row.names=1) ## import the BlkBear matrix (created in SpatialCountDensity_JBv2.R)
+CaribouMatrix <- read.csv("Caribou_Matrix.csv",header=T, row.names=1) ## import the Caribou matrix (created in SpatialCountDensity_JBv2.R)
 
 Caribou2012 <- CaribouMatrix[,163:253] ## maximum detections for 3 month snow-free 2012 sampling period - see Species_Detections.R for details
 
