@@ -1,0 +1,256 @@
+#############################################################
+# LY_scrUNF.R
+# Chapter 18 of SCR book
+# created by Joanna Burgar, 30-Jan-2017
+# script for estimating density of unmarked populations using scrUN updateY=FALSE
+#############################################################
+library(snowfall)
+library(scrbook)
+
+###--- set directory and load files
+setwd("C://Users/JBurgar/Documents/R/Analysis/DensityEstimation/BorealDeerProject/DensityModels/")
+DayLookup <- read.csv("StudyDays.csv")
+CamXY <- read.csv("CamXY.csv",row.names=1)
+
+###--- Lynx 2012 sampling occassion with most detections
+LynxMatrix <- read.csv("Lynx_Matrix.csv",header=T, row.names=1) ## import the Lynx matrix (created in SpatialCountDensity_JBv2.R)
+
+Lynx2012 <- LynxMatrix[,259:351]
+
+LY2012 <- Lynx2012[apply(Lynx2012,1,function(x)!any(is.na(x))), , drop=F]
+sum(is.na(LY2012)) # no NAs
+sum(LY2012) # 90 detections
+dim(LY2012) # 59 93
+complete.cases(LynxMatrix[,259:351]) ## rows 32,55,62
+62-3 #59 cameras
+plot(apply(LY2012,2,function(x) sum(x)), xlab= "Study Day", ylab= "Daily Detections",cex.lab=1.4)
+
+## 2012 best Lynx detections for 3 months summer ("snow-free") Study days 259:351;
+
+n <- as.matrix(LY2012)
+
+###---- camera station coordinates
+summary(CamXY)
+
+# specify how much to buffer sites by (in 10km units, according to coord.scale)
+coord.scale <- 10000
+buffer <- 1 # 10 km unit buffer
+
+traplocs <- as.matrix(CamXY[, 2:3])           # 62 camera locations in this matrix
+X <- traplocs/coord.scale                     # 62 trap coords in 10 km units
+X=X[-62,]
+X=X[-55,]
+X=X[-32,]
+dim(X)
+
+###--- create xlims and ylims
+Xl <- min(X[, 1] - buffer)
+Xu <- max(X[, 1] + buffer)
+
+Yl <- min(X[, 2] - buffer)
+Yu <- max(X[, 2] + buffer)
+xlims <- c(Xl,Xu); ylims <- c(Yl,Yu)  
+
+area <- (Xu - Xl) * (Yu - Yl) # this is in units of 10 km * 10 km
+areakm2 <- (Xu - Xl)*(Yu - Yl)*100
+areakm2
+
+###--- create xlims and ylims of scaled coordinates
+## page 155 of SCR book "While the scaling of the coordinate system is theoretically irrelevant,
+## a poorly scaled coordinate system can produce Markov chains that mix poorly."
+X.scaled <- X[,1]-47.6222
+
+Xl.scaled <- min(X.scaled - buffer)
+Xu.scaled <- max(X.scaled + buffer)
+
+Y.scaled <- X[,2]-612.3345
+Yl.scaled <- min(Y.scaled - buffer)
+Yu.scaled <- max(Y.scaled + buffer)
+xlims.scaled <- c(Xl.scaled,Xu.scaled); ylims.scaled <- c(Yl.scaled,Yu.scaled)  
+
+areakm2.scaled <- (Xu.scaled - Xl.scaled)*(Yu.scaled - Yl.scaled)*100
+
+X2 <- as.matrix(cbind(X.scaled,Y.scaled))
+dim(X2) # scaled traploc matrix in 10 km units
+
+###--- remaining model parameters
+M <- 1000 # set to 1000 for all models - relates to density of .15/km2
+niter <- 300000 # set to 300,000 for all models
+
+init1 <- list(sigma=rnorm(1,50), lam0=runif(1) , z=rep(1,M))
+init2 <- list(sigma=rnorm(1,100), lam0=runif(1) , z=rep(1,M)) #mimic parula example
+init3 <- list(sigma=rnorm(1,10), lam0=runif(1) , z=rep(1,M)) 
+tune1 <- c(0.1, 0.05, 2) ## need to think about these
+tune2 <- c(0.01, 0.01, 0.01) ## need to think about these
+tune3 <- c(0.1,0.1,0.1)
+
+###--- execute 1st model - LYout11F
+wrapper11F <- function(a){
+  LYout11F <- scrUN(n=n, X=X, M=M, niter=niter, xlims=xlims.scaled, ylims=ylims.scaled, inits=init1, tune=tune1, updateY=FALSE)
+  return(LYout11F)
+}
+
+(start.time <- Sys.time())
+sfInit(parallel=TRUE, cpus=3) #initialize cluster
+sfLibrary(scrbook) #export library scrbook
+sfExportAll() # export all data in current workspace
+sfClusterSetupRNG() #set up random number generator
+LYout11FL = sfLapply(1:3,wrapper11F) # execute 'wrapper' 3 times
+sfStop() # terminate the cluster
+(end.time <- Sys.time())
+LYout11FL.ET <- difftime(end.time, start.time, units='hours')
+
+save("LYout11FL.ET",file="LYout11FL.ET.RData")
+save("LYout11FL",file="LYout11FL.RData")
+
+###--- execute 2nd model - LYout12F
+wrapper12F <- function(a){
+  LYout12F <- scrUN(n=n, X=X, M=M, niter=niter, xlims=xlims.scaled, ylims=ylims.scaled, inits=init1, tune=tune2, updateY=FALSE)
+  return(LYout12F)
+}
+
+(start.time <- Sys.time())
+sfInit(parallel=TRUE, cpus=3) #initialize cluster
+sfLibrary(scrbook) #export library scrbook
+sfExportAll() # export all data in current workspace
+sfClusterSetupRNG() #set up random number generator
+LYout12FL = sfLapply(1:3,wrapper12F) # execute 'wrapper' 3 times
+sfStop() # terminate the cluster
+(end.time <- Sys.time())
+LYout12FL.ET <- difftime(end.time, start.time, units='hours')
+
+save("LYout12FL.ET",file="LYout12FL.ET.RData")
+save("LYout12FL",file="LYout12FL.RData")
+
+###--- execute 3rd model - LYout13F
+wrapper13F <- function(a){
+  LYout13F <- scrUN(n=n, X=X, M=M, niter=niter, xlims=xlims.scaled, ylims=ylims.scaled, inits=init1, tune=tune3, updateY=FALSE)
+  return(LYout13F)
+}
+
+(start.time <- Sys.time())
+sfInit(parallel=TRUE, cpus=3) #initialize cluster
+sfLibrary(scrbook) #export library scrbook
+sfExportAll() # export all data in current workspace
+sfClusterSetupRNG() #set up random number generator
+LYout13FL = sfLapply(1:3,wrapper13F) # execute 'wrapper' 3 times
+sfStop() # terminate the cluster
+(end.time <- Sys.time())
+LYout13FL.ET <- difftime(end.time, start.time, units='hours')
+
+save("LYout13FL.ET",file="LYout13FL.ET.RData")
+save("LYout13FL",file="LYout13FL.RData")
+
+###--- execute 4th model - LYout21F
+wrapper21F <- function(a){
+  LYout21F <- scrUN(n=n, X=X, M=M, niter=niter, xlims=xlims.scaled, ylims=ylims.scaled, inits=init2, tune=tune1, updateY=FALSE)
+  return(LYout21F)
+}
+
+(start.time <- Sys.time())
+sfInit(parallel=TRUE, cpus=3) #initialize cluster
+sfLibrary(scrbook) #export library scrbook
+sfExportAll() # export all data in current workspace
+sfClusterSetupRNG() #set up random number generator
+LYout21FL = sfLapply(1:3,wrapper21F) # execute 'wrapper' 3 times
+sfStop() # terminate the cluster
+(end.time <- Sys.time())
+LYout21FL.ET <- difftime(end.time, start.time, units='hours')
+
+save("LYout21FL.ET",file="LYout21FL.ET.RData")
+save("LYout21FL",file="LYout21FL.RData")
+
+###--- execute 5th model - LYout22F
+wrapper22F <- function(a){
+  LYout22F <- scrUN(n=n, X=X, M=M, niter=niter, xlims=xlims.scaled, ylims=ylims.scaled, inits=init2, tune=tune2, updateY=FALSE)
+  return(LYout22F)
+}
+
+(start.time <- Sys.time())
+sfInit(parallel=TRUE, cpus=3) #initialize cluster
+sfLibrary(scrbook) #export library scrbook
+sfExportAll() # export all data in current workspace
+sfClusterSetupRNG() #set up random number generator
+LYout22FL = sfLapply(1:3,wrapper22F) # execute 'wrapper' 3 times
+sfStop() # terminate the cluster
+(end.time <- Sys.time())
+LYout22FL.ET <- difftime(end.time, start.time, units='hours')
+
+save("LYout22FL.ET",file="LYout22FL.ET.RData")
+save("LYout22FL",file="LYout22FL.RData")
+
+###--- execute 6th model - LYout23F
+wrapper23F <- function(a){
+  LYout23F <- scrUN(n=n, X=X, M=M, niter=niter, xlims=xlims.scaled, ylims=ylims.scaled, inits=init2, tune=tune3, updateY=FALSE)
+  return(LYout23F)
+}
+
+(start.time <- Sys.time())
+sfInit(parallel=TRUE, cpus=3) #initialize cluster
+sfLibrary(scrbook) #export library scrbook
+sfExportAll() # export all data in current workspace
+sfClusterSetupRNG() #set up random number generator
+LYout23FL = sfLapply(1:3,wrapper23F) # execute 'wrapper' 3 times
+sfStop() # terminate the cluster
+(end.time <- Sys.time())
+LYout23FL.ET <- difftime(end.time, start.time, units='hours')
+
+save("LYout23FL.ET",file="LYout23FL.ET.RData")
+save("LYout23FL",file="LYout23FL.RData")
+
+###--- execute 7th model - LYout31F
+wrapper31F <- function(a){
+  LYout31F <- scrUN(n=n, X=X, M=M, niter=niter, xlims=xlims.scaled, ylims=ylims.scaled, inits=init3, tune=tune1, updateY=FALSE)
+  return(LYout31F)
+}
+
+(start.time <- Sys.time())
+sfInit(parallel=TRUE, cpus=3) #initialize cluster
+sfLibrary(scrbook) #export library scrbook
+sfExportAll() # export all data in current workspace
+sfClusterSetupRNG() #set up random number generator
+LYout31FL = sfLapply(1:3,wrapper31F) # execute 'wrapper' 3 times
+sfStop() # terminate the cluster
+(end.time <- Sys.time())
+LYout31FL.ET <- difftime(end.time, start.time, units='hours')
+
+save("LYout31FL.ET",file="LYout31FL.ET.RData")
+save("LYout31FL",file="LYout31FL.RData")
+
+###--- execute 8th model - LYout32F
+wrapper32F <- function(a){
+  LYout32F <- scrUN(n=n, X=X, M=M, niter=niter, xlims=xlims.scaled, ylims=ylims.scaled, inits=init3, tune=tune2, updateY=FALSE)
+  return(LYout32F)
+}
+
+(start.time <- Sys.time())
+sfInit(parallel=TRUE, cpus=3) #initialize cluster
+sfLibrary(scrbook) #export library scrbook
+sfExportAll() # export all data in current workspace
+sfClusterSetupRNG() #set up random number generator
+LYout32FL = sfLapply(1:3,wrapper32F) # execute 'wrapper' 3 times
+sfStop() # terminate the cluster
+(end.time <- Sys.time())
+LYout32FL.ET <- difftime(end.time, start.time, units='hours')
+
+save("LYout32FL.ET",file="LYout32FL.ET.RData")
+save("LYout32FL",file="LYout32FL.RData")
+
+###--- execute 9th model - LYout33F
+wrapper33F <- function(a){
+  LYout33F <- scrUN(n=n, X=X, M=M, niter=niter, xlims=xlims.scaled, ylims=ylims.scaled, inits=init3, tune=tune3, updateY=FALSE)
+  return(LYout33F)
+}
+
+(start.time <- Sys.time())
+sfInit(parallel=TRUE, cpus=3) #initialize cluster
+sfLibrary(scrbook) #export library scrbook
+sfExportAll() # export all data in current workspace
+sfClusterSetupRNG() #set up random number generator
+LYout33FL = sfLapply(1:3,wrapper33F) # execute 'wrapper' 3 times
+sfStop() # terminate the cluster
+(end.time <- Sys.time())
+LYout33FL.ET <- difftime(end.time, start.time, units='hours')
+
+save("LYout33FL.ET",file="LYout33FL.ET.RData")
+save("LYout33FL",file="LYout33FL.RData")
