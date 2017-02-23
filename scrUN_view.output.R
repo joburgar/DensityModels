@@ -1,14 +1,14 @@
 ## write loop for all outputs
 library(coda)
 
-out <- COout11FL
+out <- Fout12TL
 
 nam<-c("sigma","lam0","psi", "N")
 nam<-match(nam,dimnames(out[[1]]$sims)[[2]])
 out.lst<-mcmc.list(
-  as.mcmc(out[[1]]$sims[,nam]),
-  as.mcmc(out[[2]]$sims[,nam]),
-  as.mcmc(out[[3]]$sims[,nam]))
+  as.mcmc(out[[1]]$sims[200001:300000,nam]),
+  as.mcmc(out[[2]]$sims[200001:300000,nam]),
+  as.mcmc(out[[3]]$sims[200001:300000,nam]))
 
 
 gelman.diag(out.lst)
@@ -19,8 +19,8 @@ plot(out.lst)
 gelman.plot(out.lst)
 
 library(xtable)
-s = summary(lst)
-gd = gelman.diag(lst)
+s = summary(out.lst)
+gd = gelman.diag(out.lst)
 
 
 
@@ -29,5 +29,7 @@ output_table <- rbind(stats_table = xtable(as.data.frame(t(s$statistics))),
                       psrf_table = xtable(as.data.frame(t(gd$psrf))))
 
 write.table(output_table,
-            file="~/R/Analysis/DensityEstimation/BorealDeerProject/BlkBear_Output/stats_table.txt",
+            file="C:/Users/JBurgar/Google Drive/FisherDensity/stats_table.txt",
             quote=FALSE, sep="\t", col.names=FALSE, append=FALSE)
+
+
