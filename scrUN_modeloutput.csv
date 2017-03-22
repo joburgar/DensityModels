@@ -1,0 +1,661 @@
+Model,species,estimate,parameter,value
+CAout11F,caribou,mean,sigma,120.9945506
+CAout11F,caribou,sd,sigma,6.589000979
+CAout11F,caribou,naïve.se,sigma,0.012029815
+CAout11F,caribou,ts.se,sigma,1.383014516
+CAout11F,caribou,q2.5,sigma,111.6748943
+CAout11F,caribou,q25,sigma,115.2902557
+CAout11F,caribou,q50,sigma,119.4528294
+CAout11F,caribou,q75,sigma,126.5058531
+CAout11F,caribou,q97.5,sigma,134.1122367
+CAout11F,caribou,gd.point,sigma,1.531926836
+CAout11F,caribou,gd.upperCI,sigma,2.649123653
+CAout13F,caribou,mean,sigma,110.3215848
+CAout13F,caribou,sd,sigma,3.317258221
+CAout13F,caribou,naïve.se,sigma,0.006056457
+CAout13F,caribou,ts.se,sigma,0.349290285
+CAout13F,caribou,q2.5,sigma,105.0028018
+CAout13F,caribou,q25,sigma,107.828971
+CAout13F,caribou,q50,sigma,109.8755338
+CAout13F,caribou,q75,sigma,112.4715889
+CAout13F,caribou,q97.5,sigma,117.8182786
+CAout13F,caribou,gd.point,sigma,1.070104686
+CAout13F,caribou,gd.upperCI,sigma,1.181801535
+CAout21F,caribou,mean,sigma,112.4479614
+CAout21F,caribou,sd,sigma,7.042841146
+CAout21F,caribou,naïve.se,sigma,0.01285841
+CAout21F,caribou,ts.se,sigma,0.544881624
+CAout21F,caribou,q2.5,sigma,104.8650842
+CAout21F,caribou,q25,sigma,106.9210558
+CAout21F,caribou,q50,sigma,109.2197184
+CAout21F,caribou,q75,sigma,117.7104517
+CAout21F,caribou,q97.5,sigma,128.814656
+CAout21F,caribou,gd.point,sigma,3.742555632
+CAout21F,caribou,gd.upperCI,sigma,9.606696821
+LYout11F,lynx,mean,sigma,118.5645796
+LYout11F,lynx,sd,sigma,4.060423254
+LYout11F,lynx,naïve.se,sigma,0.007413285
+LYout11F,lynx,ts.se,sigma,0.693745515
+LYout11F,lynx,q2.5,sigma,113.7281938
+LYout11F,lynx,q25,sigma,115.7130573
+LYout11F,lynx,q50,sigma,117.4357069
+LYout11F,lynx,q75,sigma,120.0775295
+LYout11F,lynx,q97.5,sigma,129.6019676
+LYout11F,lynx,gd.point,sigma,1.460254792
+LYout11F,lynx,gd.upperCI,sigma,2.448549127
+LYout13F,lynx,mean,sigma,124.4112066
+LYout13F,lynx,sd,sigma,12.78919784
+LYout13F,lynx,naïve.se,sigma,0.023349774
+LYout13F,lynx,ts.se,sigma,1.730929872
+LYout13F,lynx,q2.5,sigma,112.7473232
+LYout13F,lynx,q25,sigma,115.142451
+LYout13F,lynx,q50,sigma,117.6519285
+LYout13F,lynx,q75,sigma,133.6646293
+LYout13F,lynx,q97.5,sigma,155.8748445
+LYout13F,lynx,gd.point,sigma,5.283636093
+LYout13F,lynx,gd.upperCI,sigma,16.23677085
+LYout21F,lynx,mean,sigma,122.1293814
+LYout21F,lynx,sd,sigma,6.93843908
+LYout21F,lynx,naïve.se,sigma,0.012667799
+LYout21F,lynx,ts.se,sigma,1.32262851
+LYout21F,lynx,q2.5,sigma,113.0626551
+LYout21F,lynx,q25,sigma,116.7198084
+LYout21F,lynx,q50,sigma,119.8513308
+LYout21F,lynx,q75,sigma,127.0961377
+LYout21F,lynx,q97.5,sigma,137.3798124
+LYout21F,lynx,gd.point,sigma,1.276675445
+LYout21F,lynx,gd.upperCI,sigma,1.849389423
+MOout23F,moose,mean,sigma,114.7049499
+MOout23F,moose,sd,sigma,6.62734612
+MOout23F,moose,naïve.se,sigma,0.012099823
+MOout23F,moose,ts.se,sigma,1.118869834
+MOout23F,moose,q2.5,sigma,105.7175009
+MOout23F,moose,q25,sigma,109.489452
+MOout23F,moose,q50,sigma,113.4711671
+MOout23F,moose,q75,sigma,118.5599936
+MOout23F,moose,q97.5,sigma,130.1244515
+MOout23F,moose,gd.point,sigma,2.538748546
+MOout23F,moose,gd.upperCI,sigma,4.694943047
+WOout11F,wolf,mean,sigma,122.9861164
+WOout11F,wolf,sd,sigma,8.873566953
+WOout11F,wolf,naïve.se,sigma,0.016200843
+WOout11F,wolf,ts.se,sigma,2.302159925
+WOout11F,wolf,q2.5,sigma,112.3928704
+WOout11F,wolf,q25,sigma,116.1309923
+WOout11F,wolf,q50,sigma,120.2905897
+WOout11F,wolf,q75,sigma,128.4094069
+WOout11F,wolf,q97.5,sigma,146.1102283
+WOout11F,wolf,gd.point,sigma,2.348319004
+WOout11F,wolf,gd.upperCI,sigma,6.24430546
+WOout21F,wolf,mean,sigma,126.0154024
+WOout21F,wolf,sd,sigma,8.881391776
+WOout21F,wolf,naïve.se,sigma,0.016215129
+WOout21F,wolf,ts.se,sigma,1.234848026
+WOout21F,wolf,q2.5,sigma,112.6736614
+WOout21F,wolf,q25,sigma,118.5838631
+WOout21F,wolf,q50,sigma,125.3318631
+WOout21F,wolf,q75,sigma,131.3357776
+WOout21F,wolf,q97.5,sigma,146.5358331
+WOout21F,wolf,gd.point,sigma,2.628073348
+WOout21F,wolf,gd.upperCI,sigma,5.135825601
+WOout23F,wolf,mean,sigma,124.2837306
+WOout23F,wolf,sd,sigma,9.565905766
+WOout23F,wolf,naïve.se,sigma,0.017464875
+WOout23F,wolf,ts.se,sigma,2.785084893
+WOout23F,wolf,q2.5,sigma,113.2907907
+WOout23F,wolf,q25,sigma,117.0968996
+WOout23F,wolf,q50,sigma,121.2859702
+WOout23F,wolf,q75,sigma,129.795945
+WOout23F,wolf,q97.5,sigma,149.5463622
+WOout23F,wolf,gd.point,sigma,1.216450411
+WOout23F,wolf,gd.upperCI,sigma,1.652220824
+BBout11F,black bear,mean,sigma,130.4359432
+BBout11F,black bear,sd,sigma,7.283867253
+BBout11F,black bear,naïve.se,sigma,0.013298461
+BBout11F,black bear,ts.se,sigma,1.280328693
+BBout11F,black bear,q2.5,sigma,118.3771837
+BBout11F,black bear,q25,sigma,124.2974388
+BBout11F,black bear,q50,sigma,130.4062821
+BBout11F,black bear,q75,sigma,135.9983626
+BBout11F,black bear,q97.5,sigma,145.116152
+BBout11F,black bear,gd.point,sigma,1.595599934
+BBout11F,black bear,gd.upperCI,sigma,2.568543877
+BBout13F,black bear,mean,sigma,141.9380528
+BBout13F,black bear,sd,sigma,16.76210219
+BBout13F,black bear,naïve.se,sigma,0.030603272
+BBout13F,black bear,ts.se,sigma,1.586233329
+BBout13F,black bear,q2.5,sigma,112.997699
+BBout13F,black bear,q25,sigma,127.1320799
+BBout13F,black bear,q50,sigma,145.8121564
+BBout13F,black bear,q75,sigma,158.7389517
+BBout13F,black bear,q97.5,sigma,164.0473713
+BBout13F,black bear,gd.point,sigma,5.287882437
+BBout13F,black bear,gd.upperCI,sigma,13.44875379
+BBout21F,black bear,mean,sigma,159.7273819
+BBout21F,black bear,sd,sigma,23.66678619
+BBout21F,black bear,naïve.se,sigma,0.043209442
+BBout21F,black bear,ts.se,sigma,2.399420871
+BBout21F,black bear,q2.5,sigma,119.8315268
+BBout21F,black bear,q25,sigma,134.2428843
+BBout21F,black bear,q50,sigma,168.3362535
+BBout21F,black bear,q75,sigma,178.3824553
+BBout21F,black bear,q97.5,sigma,194.406311
+BBout21F,black bear,gd.point,sigma,4.097694512
+BBout21F,black bear,gd.upperCI,sigma,8.601845813
+BBout22F,black bear,mean,sigma,126.6190236
+BBout22F,black bear,sd,sigma,2.550466932
+BBout22F,black bear,naïve.se,sigma,0.004656494
+BBout22F,black bear,ts.se,sigma,0.533551352
+BBout22F,black bear,q2.5,sigma,120.7328032
+BBout22F,black bear,q25,sigma,124.6905321
+BBout22F,black bear,q50,sigma,127.2350833
+BBout22F,black bear,q75,sigma,128.0048849
+BBout22F,black bear,q97.5,sigma,131.5424486
+BBout22F,black bear,gd.point,sigma,4.951816173
+BBout22F,black bear,gd.upperCI,sigma,14.04990961
+BBout23F,black bear,mean,sigma,143.7732762
+BBout23F,black bear,sd,sigma,18.91997574
+BBout23F,black bear,naïve.se,sigma,0.034542992
+BBout23F,black bear,ts.se,sigma,2.117586358
+BBout23F,black bear,q2.5,sigma,120.8140786
+BBout23F,black bear,q25,sigma,127.8646563
+BBout23F,black bear,q50,sigma,136.3820952
+BBout23F,black bear,q75,sigma,162.3865228
+BBout23F,black bear,q97.5,sigma,177.8057026
+BBout23F,black bear,gd.point,sigma,4.086219926
+BBout23F,black bear,gd.upperCI,sigma,9.024094042
+CAout11F,caribou,mean,lam0,4.781852915
+CAout11F,caribou,sd,lam0,3.380507731
+CAout11F,caribou,naïve.se,lam0,0.006171934
+CAout11F,caribou,ts.se,lam0,0.745043835
+CAout11F,caribou,q2.5,lam0,0.212590293
+CAout11F,caribou,q25,lam0,1.839707888
+CAout11F,caribou,q50,lam0,4.468452527
+CAout11F,caribou,q75,lam0,7.141451169
+CAout11F,caribou,q97.5,lam0,12.06394698
+CAout11F,caribou,gd.point,lam0,2.229418909
+CAout11F,caribou,gd.upperCI,lam0,4.071313252
+CAout13F,caribou,mean,lam0,36.90319666
+CAout13F,caribou,sd,lam0,16.43617528
+CAout13F,caribou,naïve.se,lam0,0.030008213
+CAout13F,caribou,ts.se,lam0,3.606180427
+CAout13F,caribou,q2.5,lam0,9.303141995
+CAout13F,caribou,q25,lam0,22.62918772
+CAout13F,caribou,q50,lam0,36.63765276
+CAout13F,caribou,q75,lam0,51.27963968
+CAout13F,caribou,q97.5,lam0,66.09609839
+CAout13F,caribou,gd.point,lam0,2.855836085
+CAout13F,caribou,gd.upperCI,lam0,5.999342034
+CAout21F,caribou,mean,lam0,39.48176226
+CAout21F,caribou,sd,lam0,26.09780182
+CAout21F,caribou,naïve.se,lam0,0.047647849
+CAout21F,caribou,ts.se,lam0,1.067908763
+CAout21F,caribou,q2.5,lam0,0.800922084
+CAout21F,caribou,q25,lam0,4.029863984
+CAout21F,caribou,q50,lam0,55.05942738
+CAout21F,caribou,q75,lam0,59.90325705
+CAout21F,caribou,q97.5,lam0,64.95325538
+CAout21F,caribou,gd.point,lam0,24.99336975
+CAout21F,caribou,gd.upperCI,lam0,54.81714096
+LYout11F,lynx,mean,lam0,28.67475849
+LYout11F,lynx,sd,lam0,7.919824777
+LYout11F,lynx,naïve.se,lam0,0.014459556
+LYout11F,lynx,ts.se,lam0,1.408451336
+LYout11F,lynx,q2.5,lam0,12.41388623
+LYout11F,lynx,q25,lam0,22.95453841
+LYout11F,lynx,q50,lam0,28.24180858
+LYout11F,lynx,q75,lam0,34.70330312
+LYout11F,lynx,q97.5,lam0,43.63466181
+LYout11F,lynx,gd.point,lam0,3.946428386
+LYout11F,lynx,gd.upperCI,lam0,7.499671579
+LYout13F,lynx,mean,lam0,25.11108202
+LYout13F,lynx,sd,lam0,18.1825002
+LYout13F,lynx,naïve.se,lam0,0.033196552
+LYout13F,lynx,ts.se,lam0,2.837622279
+LYout13F,lynx,q2.5,lam0,0.216832205
+LYout13F,lynx,q25,lam0,4.077624702
+LYout13F,lynx,q50,lam0,28.04904129
+LYout13F,lynx,q75,lam0,40.67233363
+LYout13F,lynx,q97.5,lam0,56.50866771
+LYout13F,lynx,gd.point,lam0,3.707983654
+LYout13F,lynx,gd.upperCI,lam0,8.550303152
+LYout21F,lynx,mean,lam0,26.01812139
+LYout21F,lynx,sd,lam0,13.63357473
+LYout21F,lynx,naïve.se,lam0,0.024891388
+LYout21F,lynx,ts.se,lam0,2.962956648
+LYout21F,lynx,q2.5,lam0,4.620606811
+LYout21F,lynx,q25,lam0,15.95160885
+LYout21F,lynx,q50,lam0,22.64762268
+LYout21F,lynx,q75,lam0,36.3467774
+LYout21F,lynx,q97.5,lam0,52.63442919
+LYout21F,lynx,gd.point,lam0,3.226615088
+LYout21F,lynx,gd.upperCI,lam0,7.512404059
+MOout23F,moose,mean,lam0,32.52630306
+MOout23F,moose,sd,lam0,27.28156788
+MOout23F,moose,naïve.se,lam0,0.0498091
+MOout23F,moose,ts.se,lam0,3.761111784
+MOout23F,moose,q2.5,lam0,1.009322282
+MOout23F,moose,q25,lam0,9.308811292
+MOout23F,moose,q50,lam0,22.77317249
+MOout23F,moose,q75,lam0,57.05847572
+MOout23F,moose,q97.5,lam0,87.18146211
+MOout23F,moose,gd.point,lam0,6.964554844
+MOout23F,moose,gd.upperCI,lam0,15.82817009
+WOout11F,wolf,mean,lam0,25.87894471
+WOout11F,wolf,sd,lam0,9.693441985
+WOout11F,wolf,naïve.se,lam0,0.017697723
+WOout11F,wolf,ts.se,lam0,2.13427407
+WOout11F,wolf,q2.5,lam0,9.390036077
+WOout11F,wolf,q25,lam0,18.99215642
+WOout11F,wolf,q50,lam0,25.7798636
+WOout11F,wolf,q75,lam0,32.03579459
+WOout11F,wolf,q97.5,lam0,44.03594577
+WOout11F,wolf,gd.point,lam0,5.880404318
+WOout11F,wolf,gd.upperCI,lam0,11.62178148
+WOout21F,wolf,mean,lam0,13.20927478
+WOout21F,wolf,sd,lam0,14.27727102
+WOout21F,wolf,naïve.se,lam0,0.026066611
+WOout21F,wolf,ts.se,lam0,3.163805926
+WOout21F,wolf,q2.5,lam0,0.304707633
+WOout21F,wolf,q25,lam0,1.905648194
+WOout21F,wolf,q50,lam0,5.671002993
+WOout21F,wolf,q75,lam0,20.70523895
+WOout21F,wolf,q97.5,lam0,41.54104566
+WOout21F,wolf,gd.point,lam0,2.824627976
+WOout21F,wolf,gd.upperCI,lam0,7.033911914
+WOout23F,wolf,mean,lam0,15.69384452
+WOout23F,wolf,sd,lam0,11.19887823
+WOout23F,wolf,naïve.se,lam0,0.020446261
+WOout23F,wolf,ts.se,lam0,1.680487687
+WOout23F,wolf,q2.5,lam0,0.185357165
+WOout23F,wolf,q25,lam0,6.54706126
+WOout23F,wolf,q50,lam0,14.28604617
+WOout23F,wolf,q75,lam0,23.52995674
+WOout23F,wolf,q97.5,lam0,37.96686354
+WOout23F,wolf,gd.point,lam0,1.996308283
+WOout23F,wolf,gd.upperCI,lam0,3.573654015
+BBout11F,black bear,mean,lam0,14.53193678
+BBout11F,black bear,sd,lam0,9.731113925
+BBout11F,black bear,naïve.se,lam0,0.017766502
+BBout11F,black bear,ts.se,lam0,1.388657697
+BBout11F,black bear,q2.5,lam0,0.612990229
+BBout11F,black bear,q25,lam0,5.753545589
+BBout11F,black bear,q50,lam0,15.12644539
+BBout11F,black bear,q75,lam0,19.96852094
+BBout11F,black bear,q97.5,lam0,34.94381975
+BBout11F,black bear,gd.point,lam0,4.459059868
+BBout11F,black bear,gd.upperCI,lam0,9.579252024
+BBout13F,black bear,mean,lam0,48.12475901
+BBout13F,black bear,sd,lam0,36.82120484
+BBout13F,black bear,naïve.se,lam0,0.067226015
+BBout13F,black bear,ts.se,lam0,4.052996288
+BBout13F,black bear,q2.5,lam0,0.194019522
+BBout13F,black bear,q25,lam0,9.14790101
+BBout13F,black bear,q50,lam0,43.36485444
+BBout13F,black bear,q75,lam0,79.45051124
+BBout13F,black bear,q97.5,lam0,112.1811745
+BBout13F,black bear,gd.point,lam0,10.62671997
+BBout13F,black bear,gd.upperCI,lam0,24.79627769
+BBout21F,black bear,mean,lam0,6.467928851
+BBout21F,black bear,sd,lam0,7.500718391
+BBout21F,black bear,naïve.se,lam0,0.013694376
+BBout21F,black bear,ts.se,lam0,0.688395141
+BBout21F,black bear,q2.5,lam0,0.018771339
+BBout21F,black bear,q25,lam0,0.32060232
+BBout21F,black bear,q50,lam0,2.22022739
+BBout21F,black bear,q75,lam0,13.25709973
+BBout21F,black bear,q97.5,lam0,21.73121406
+BBout21F,black bear,gd.point,lam0,3.703981934
+BBout21F,black bear,gd.upperCI,lam0,7.823532999
+BBout22F,black bear,mean,lam0,8.304263616
+BBout22F,black bear,sd,lam0,3.882640689
+BBout22F,black bear,naïve.se,lam0,0.0070887
+BBout22F,black bear,ts.se,lam0,0.698416567
+BBout22F,black bear,q2.5,lam0,2.502932613
+BBout22F,black bear,q25,lam0,5.034481791
+BBout22F,black bear,q50,lam0,7.492705476
+BBout22F,black bear,q75,lam0,12.49812547
+BBout22F,black bear,q97.5,lam0,14.82029777
+BBout22F,black bear,gd.point,lam0,10.65381438
+BBout22F,black bear,gd.upperCI,lam0,20.87615985
+BBout23F,black bear,mean,lam0,5.842228618
+BBout23F,black bear,sd,lam0,5.597302506
+BBout23F,black bear,naïve.se,lam0,0.010219229
+BBout23F,black bear,ts.se,lam0,1.074310469
+BBout23F,black bear,q2.5,lam0,0.044683823
+BBout23F,black bear,q25,lam0,0.952176016
+BBout23F,black bear,q50,lam0,4.077164462
+BBout23F,black bear,q75,lam0,10.04877305
+BBout23F,black bear,q97.5,lam0,18.20014676
+BBout23F,black bear,gd.point,lam0,1.407287079
+BBout23F,black bear,gd.upperCI,lam0,2.342317361
+CAout11F,caribou,mean,psi,0.48709987
+CAout11F,caribou,sd,psi,0.296240936
+CAout11F,caribou,naïve.se,psi,0.000540859
+CAout11F,caribou,ts.se,psi,0.019959346
+CAout11F,caribou,q2.5,psi,0.027166021
+CAout11F,caribou,q25,psi,0.225926713
+CAout11F,caribou,q50,psi,0.487562568
+CAout11F,caribou,q75,psi,0.742387946
+CAout11F,caribou,q97.5,psi,0.979225236
+CAout11F,caribou,gd.point,psi,1.108778394
+CAout11F,caribou,gd.upperCI,psi,1.336892473
+CAout13F,caribou,mean,psi,0.521397514
+CAout13F,caribou,sd,psi,0.272974764
+CAout13F,caribou,naïve.se,psi,0.000498381
+CAout13F,caribou,ts.se,psi,0.017140182
+CAout13F,caribou,q2.5,psi,0.067898791
+CAout13F,caribou,q25,psi,0.291172084
+CAout13F,caribou,q50,psi,0.505669746
+CAout13F,caribou,q75,psi,0.759760097
+CAout13F,caribou,q97.5,psi,0.97945637
+CAout13F,caribou,gd.point,psi,1.105036862
+CAout13F,caribou,gd.upperCI,psi,1.319774152
+CAout21F,caribou,mean,psi,0.539262515
+CAout21F,caribou,sd,psi,0.276499464
+CAout21F,caribou,naïve.se,psi,0.000504817
+CAout21F,caribou,ts.se,psi,0.017018959
+CAout21F,caribou,q2.5,psi,0.05545343
+CAout21F,caribou,q25,psi,0.312888764
+CAout21F,caribou,q50,psi,0.543569098
+CAout21F,caribou,q75,psi,0.777639236
+CAout21F,caribou,q97.5,psi,0.980955441
+CAout21F,caribou,gd.point,psi,1.066656664
+CAout21F,caribou,gd.upperCI,psi,1.210270435
+LYout11F,lynx,mean,psi,0.512668503
+LYout11F,lynx,sd,psi,0.269519778
+LYout11F,lynx,naïve.se,psi,0.000492074
+LYout11F,lynx,ts.se,psi,0.025538447
+LYout11F,lynx,q2.5,psi,0.054603958
+LYout11F,lynx,q25,psi,0.283330734
+LYout11F,lynx,q50,psi,0.516196005
+LYout11F,lynx,q75,psi,0.734592527
+LYout11F,lynx,q97.5,psi,0.971102782
+LYout11F,lynx,gd.point,psi,1.02454198
+LYout11F,lynx,gd.upperCI,psi,1.070860312
+LYout13F,lynx,mean,psi,0.48598923
+LYout13F,lynx,sd,psi,0.293110873
+LYout13F,lynx,naïve.se,psi,0.000535145
+LYout13F,lynx,ts.se,psi,0.018821903
+LYout13F,lynx,q2.5,psi,0.028685577
+LYout13F,lynx,q25,psi,0.215141393
+LYout13F,lynx,q50,psi,0.486111623
+LYout13F,lynx,q75,psi,0.743402756
+LYout13F,lynx,q97.5,psi,0.971236853
+LYout13F,lynx,gd.point,psi,1.807036903
+LYout13F,lynx,gd.upperCI,psi,3.118626631
+LYout21F,lynx,mean,psi,0.401160214
+LYout21F,lynx,sd,psi,0.29487977
+LYout21F,lynx,naïve.se,psi,0.000538374
+LYout21F,lynx,ts.se,psi,0.034987559
+LYout21F,lynx,q2.5,psi,0.023207369
+LYout21F,lynx,q25,psi,0.10965762
+LYout21F,lynx,q50,psi,0.378473715
+LYout21F,lynx,q75,psi,0.642460896
+LYout21F,lynx,q97.5,psi,0.956906656
+LYout21F,lynx,gd.point,psi,1.130586537
+LYout21F,lynx,gd.upperCI,psi,1.381739626
+MOout23F,moose,mean,psi,0.476250927
+MOout23F,moose,sd,psi,0.278401533
+MOout23F,moose,naïve.se,psi,0.000508289
+MOout23F,moose,ts.se,psi,0.019128566
+MOout23F,moose,q2.5,psi,0.053419745
+MOout23F,moose,q25,psi,0.230143364
+MOout23F,moose,q50,psi,0.455527305
+MOout23F,moose,q75,psi,0.715244579
+MOout23F,moose,q97.5,psi,0.964124906
+MOout23F,moose,gd.point,psi,1.200705161
+MOout23F,moose,gd.upperCI,psi,1.566372512
+WOout11F,wolf,mean,psi,0.339814205
+WOout11F,wolf,sd,psi,0.312526819
+WOout11F,wolf,naïve.se,psi,0.000570593
+WOout11F,wolf,ts.se,psi,0.037142079
+WOout11F,wolf,q2.5,psi,0.003687799
+WOout11F,wolf,q25,psi,0.05296179
+WOout11F,wolf,q50,psi,0.235268856
+WOout11F,wolf,q75,psi,0.607211382
+WOout11F,wolf,q97.5,psi,0.959688846
+WOout11F,wolf,gd.point,psi,1.573104203
+WOout11F,wolf,gd.upperCI,psi,2.51643697
+WOout21F,wolf,mean,psi,0.467375897
+WOout21F,wolf,sd,psi,0.286719188
+WOout21F,wolf,naïve.se,psi,0.000523475
+WOout21F,wolf,ts.se,psi,0.024146924
+WOout21F,wolf,q2.5,psi,0.037443039
+WOout21F,wolf,q25,psi,0.210928489
+WOout21F,wolf,q50,psi,0.452827179
+WOout21F,wolf,q75,psi,0.708779682
+WOout21F,wolf,q97.5,psi,0.972514642
+WOout21F,wolf,gd.point,psi,1.140140748
+WOout21F,wolf,gd.upperCI,psi,1.419368395
+WOout23F,wolf,mean,psi,0.442363703
+WOout23F,wolf,sd,psi,0.292287358
+WOout23F,wolf,naïve.se,psi,0.000533641
+WOout23F,wolf,ts.se,psi,0.027626889
+WOout23F,wolf,q2.5,psi,0.020732994
+WOout23F,wolf,q25,psi,0.178498371
+WOout23F,wolf,q50,psi,0.426889451
+WOout23F,wolf,q75,psi,0.683787076
+WOout23F,wolf,q97.5,psi,0.969931453
+WOout23F,wolf,gd.point,psi,1.077947591
+WOout23F,wolf,gd.upperCI,psi,1.246166726
+BBout11F,black bear,mean,psi,0.336140521
+BBout11F,black bear,sd,psi,0.274372581
+BBout11F,black bear,naïve.se,psi,0.000500934
+BBout11F,black bear,ts.se,psi,0.036060787
+BBout11F,black bear,q2.5,psi,0.03001656
+BBout11F,black bear,q25,psi,0.095815621
+BBout11F,black bear,q50,psi,0.242632883
+BBout11F,black bear,q75,psi,0.540386422
+BBout11F,black bear,q97.5,psi,0.929818575
+BBout11F,black bear,gd.point,psi,1.067799825
+BBout11F,black bear,gd.upperCI,psi,1.218607807
+BBout13F,black bear,mean,psi,0.184781913
+BBout13F,black bear,sd,psi,0.271161798
+BBout13F,black bear,naïve.se,psi,0.000495071
+BBout13F,black bear,ts.se,psi,0.027149685
+BBout13F,black bear,q2.5,psi,0.000465771
+BBout13F,black bear,q25,psi,0.002792473
+BBout13F,black bear,q50,psi,0.02953067
+BBout13F,black bear,q75,psi,0.276378314
+BBout13F,black bear,q97.5,psi,0.916017749
+BBout13F,black bear,gd.point,psi,1.705431588
+BBout13F,black bear,gd.upperCI,psi,3.378411152
+BBout21F,black bear,mean,psi,0.165855275
+BBout21F,black bear,sd,psi,0.227670574
+BBout21F,black bear,naïve.se,psi,0.000415668
+BBout21F,black bear,ts.se,psi,0.030477864
+BBout21F,black bear,q2.5,psi,0.002344402
+BBout21F,black bear,q25,psi,0.01321895
+BBout21F,black bear,q50,psi,0.060778363
+BBout21F,black bear,q75,psi,0.229030773
+BBout21F,black bear,q97.5,psi,0.844712856
+BBout21F,black bear,gd.point,psi,1.19138273
+BBout21F,black bear,gd.upperCI,psi,1.54534481
+BBout22F,black bear,mean,psi,0.53487972
+BBout22F,black bear,sd,psi,0.186407279
+BBout22F,black bear,naïve.se,psi,0.000340332
+BBout22F,black bear,ts.se,psi,0.02324017
+BBout22F,black bear,q2.5,psi,0.292368733
+BBout22F,black bear,q25,psi,0.391236015
+BBout22F,black bear,q50,psi,0.483916157
+BBout22F,black bear,q75,psi,0.640768537
+BBout22F,black bear,q97.5,psi,0.970912854
+BBout22F,black bear,gd.point,psi,1.833581747
+BBout22F,black bear,gd.upperCI,psi,4.014669351
+BBout23F,black bear,mean,psi,0.336738655
+BBout23F,black bear,sd,psi,0.29179366
+BBout23F,black bear,naïve.se,psi,0.00053274
+BBout23F,black bear,ts.se,psi,0.022924372
+BBout23F,black bear,q2.5,psi,0.003372964
+BBout23F,black bear,q25,psi,0.075311232
+BBout23F,black bear,q50,psi,0.257072389
+BBout23F,black bear,q75,psi,0.552636847
+BBout23F,black bear,q97.5,psi,0.950870137
+BBout23F,black bear,gd.point,psi,1.275696862
+BBout23F,black bear,gd.upperCI,psi,1.766300725
+CAout11F,caribou,mean,Nhat,487.0942733
+CAout11F,caribou,sd,Nhat,296.5486796
+CAout11F,caribou,naïve.se,Nhat,0.541421337
+CAout11F,caribou,ts.se,Nhat,20.09581942
+CAout11F,caribou,q2.5,Nhat,27
+CAout11F,caribou,q25,Nhat,226
+CAout11F,caribou,q50,Nhat,488
+CAout11F,caribou,q75,Nhat,743
+CAout11F,caribou,q97.5,Nhat,980
+CAout11F,caribou,gd.point,Nhat,1.109004619
+CAout11F,caribou,gd.upperCI,Nhat,1.337543283
+CAout13F,caribou,mean,Nhat,521.44959
+CAout13F,caribou,sd,Nhat,273.1448271
+CAout13F,caribou,naïve.se,Nhat,0.498691944
+CAout13F,caribou,ts.se,Nhat,17.25906628
+CAout13F,caribou,q2.5,Nhat,67
+CAout13F,caribou,q25,Nhat,291
+CAout13F,caribou,q50,Nhat,506
+CAout13F,caribou,q75,Nhat,760
+CAout13F,caribou,q97.5,Nhat,980
+CAout13F,caribou,gd.point,Nhat,1.105385422
+CAout13F,caribou,gd.upperCI,Nhat,1.320694318
+CAout21F,caribou,mean,Nhat,539.32372
+CAout21F,caribou,sd,Nhat,276.7360237
+CAout21F,caribou,naïve.se,Nhat,0.505248542
+CAout21F,caribou,ts.se,Nhat,16.94135459
+CAout21F,caribou,q2.5,Nhat,55
+CAout21F,caribou,q25,Nhat,313
+CAout21F,caribou,q50,Nhat,544
+CAout21F,caribou,q75,Nhat,778
+CAout21F,caribou,q97.5,Nhat,981
+CAout21F,caribou,gd.point,Nhat,1.066712017
+CAout21F,caribou,gd.upperCI,Nhat,1.210396036
+LYout11F,lynx,mean,Nhat,512.7117133
+LYout11F,lynx,sd,Nhat,269.7582993
+LYout11F,lynx,naïve.se,Nhat,0.492509019
+LYout11F,lynx,ts.se,Nhat,25.83409928
+LYout11F,lynx,q2.5,Nhat,54
+LYout11F,lynx,q25,Nhat,283
+LYout11F,lynx,q50,Nhat,516
+LYout11F,lynx,q75,Nhat,735
+LYout11F,lynx,q97.5,Nhat,971
+LYout11F,lynx,gd.point,Nhat,1.024657389
+LYout11F,lynx,gd.upperCI,Nhat,1.071177424
+LYout13F,lynx,mean,Nhat,485.97715
+LYout13F,lynx,sd,Nhat,293.4025983
+LYout13F,lynx,naïve.se,Nhat,0.535677405
+LYout13F,lynx,ts.se,Nhat,19.05773289
+LYout13F,lynx,q2.5,Nhat,28
+LYout13F,lynx,q25,Nhat,214
+LYout13F,lynx,q50,Nhat,486
+LYout13F,lynx,q75,Nhat,744
+LYout13F,lynx,q97.5,Nhat,972
+LYout13F,lynx,gd.point,Nhat,1.808416829
+LYout13F,lynx,gd.upperCI,Nhat,3.121756434
+LYout21F,lynx,mean,Nhat,401.0023967
+LYout21F,lynx,sd,Nhat,295.2102503
+LYout21F,lynx,naïve.se,Nhat,0.538977711
+LYout21F,lynx,ts.se,Nhat,35.43348004
+LYout21F,lynx,q2.5,Nhat,23
+LYout21F,lynx,q25,Nhat,108
+LYout21F,lynx,q50,Nhat,379
+LYout21F,lynx,q75,Nhat,642
+LYout21F,lynx,q97.5,Nhat,957
+LYout21F,lynx,gd.point,Nhat,1.130913892
+LYout21F,lynx,gd.upperCI,Nhat,1.382590244
+MOout23F,moose,mean,Nhat,476.2351733
+MOout23F,moose,sd,Nhat,278.6362152
+MOout23F,moose,naïve.se,Nhat,0.508717801
+MOout23F,moose,ts.se,Nhat,19.31213875
+MOout23F,moose,q2.5,Nhat,54
+MOout23F,moose,q25,Nhat,230
+MOout23F,moose,q50,Nhat,456
+MOout23F,moose,q75,Nhat,715
+MOout23F,moose,q97.5,Nhat,965
+MOout23F,moose,gd.point,Nhat,1.201220047
+MOout23F,moose,gd.upperCI,Nhat,1.567657748
+WOout11F,wolf,mean,Nhat,339.5091133
+WOout11F,wolf,sd,Nhat,312.9446076
+WOout11F,wolf,naïve.se,Nhat,0.571356069
+WOout11F,wolf,ts.se,Nhat,37.80670839
+WOout11F,wolf,q2.5,Nhat,3
+WOout11F,wolf,q25,Nhat,52
+WOout11F,wolf,q50,Nhat,235
+WOout11F,wolf,q75,Nhat,607
+WOout11F,wolf,q97.5,Nhat,960
+WOout11F,wolf,gd.point,Nhat,1.573793564
+WOout11F,wolf,gd.upperCI,Nhat,2.517702922
+WOout21F,wolf,mean,Nhat,467.31709
+WOout21F,wolf,sd,Nhat,287.0050354
+WOout21F,wolf,naïve.se,Nhat,0.523997107
+WOout21F,wolf,ts.se,Nhat,24.37928426
+WOout21F,wolf,q2.5,Nhat,37
+WOout21F,wolf,q25,Nhat,211
+WOout21F,wolf,q50,Nhat,453
+WOout21F,wolf,q75,Nhat,709
+WOout21F,wolf,q97.5,Nhat,973
+WOout21F,wolf,gd.point,Nhat,1.140457575
+WOout21F,wolf,gd.upperCI,Nhat,1.420230386
+WOout23F,wolf,mean,Nhat,442.2402633
+WOout23F,wolf,sd,Nhat,292.5865127
+WOout23F,wolf,naïve.se,Nhat,0.534187444
+WOout23F,wolf,ts.se,Nhat,27.56028774
+WOout23F,wolf,q2.5,Nhat,20
+WOout23F,wolf,q25,Nhat,178
+WOout23F,wolf,q50,Nhat,427
+WOout23F,wolf,q75,Nhat,684
+WOout23F,wolf,q97.5,Nhat,970
+WOout23F,wolf,gd.point,Nhat,1.078107703
+WOout23F,wolf,gd.upperCI,Nhat,1.246636831
+BBout11F,black bear,mean,Nhat,335.8042733
+BBout11F,black bear,sd,Nhat,274.6828277
+BBout11F,black bear,naïve.se,Nhat,0.501499936
+BBout11F,black bear,ts.se,Nhat,36.56924143
+BBout11F,black bear,q2.5,Nhat,30
+BBout11F,black bear,q25,Nhat,95
+BBout11F,black bear,q50,Nhat,242
+BBout11F,black bear,q75,Nhat,541
+BBout11F,black bear,q97.5,Nhat,930
+BBout11F,black bear,gd.point,Nhat,1.067838113
+BBout11F,black bear,gd.upperCI,Nhat,1.21869328
+BBout13F,black bear,mean,Nhat,184.15157
+BBout13F,black bear,sd,Nhat,271.5658643
+BBout13F,black bear,naïve.se,Nhat,0.495809166
+BBout13F,black bear,ts.se,Nhat,27.91452081
+BBout13F,black bear,q2.5,Nhat,1
+BBout13F,black bear,q25,Nhat,1
+BBout13F,black bear,q50,Nhat,28
+BBout13F,black bear,q75,Nhat,276
+BBout13F,black bear,q97.5,Nhat,916
+BBout13F,black bear,gd.point,Nhat,1.706735371
+BBout13F,black bear,gd.upperCI,Nhat,3.382311913
+BBout21F,black bear,mean,Nhat,165.1957467
+BBout21F,black bear,sd,Nhat,227.952837
+BBout21F,black bear,naïve.se,Nhat,0.416183036
+BBout21F,black bear,ts.se,Nhat,30.26838811
+BBout21F,black bear,q2.5,Nhat,2
+BBout21F,black bear,q25,Nhat,12
+BBout21F,black bear,q50,Nhat,60
+BBout21F,black bear,q75,Nhat,228
+BBout21F,black bear,q97.5,Nhat,845
+BBout21F,black bear,gd.point,Nhat,1.192010081
+BBout21F,black bear,gd.upperCI,Nhat,1.548197005
+BBout22F,black bear,mean,Nhat,534.95225
+BBout22F,black bear,sd,Nhat,186.148706
+BBout22F,black bear,naïve.se,Nhat,0.339859484
+BBout22F,black bear,ts.se,Nhat,24.63182271
+BBout22F,black bear,q2.5,Nhat,295
+BBout22F,black bear,q25,Nhat,391
+BBout22F,black bear,q50,Nhat,483
+BBout22F,black bear,q75,Nhat,640
+BBout22F,black bear,q97.5,Nhat,972
+BBout22F,black bear,gd.point,Nhat,1.841438505
+BBout22F,black bear,gd.upperCI,Nhat,4.076127421
+BBout23F,black bear,mean,Nhat,336.4369567
+BBout23F,black bear,sd,Nhat,292.1131179
+BBout23F,black bear,naïve.se,Nhat,0.533323147
+BBout23F,black bear,ts.se,Nhat,23.2349797
+BBout23F,black bear,q2.5,Nhat,3
+BBout23F,black bear,q25,Nhat,75
+BBout23F,black bear,q50,Nhat,257
+BBout23F,black bear,q75,Nhat,553
+BBout23F,black bear,q97.5,Nhat,951
+BBout23F,black bear,gd.point,Nhat,1.276122401
+BBout23F,black bear,gd.upperCI,Nhat,1.767281748
