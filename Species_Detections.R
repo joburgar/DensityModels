@@ -348,11 +348,12 @@ plot(colSums(WolfMatrix[,214:380],na.rm=T))
 
 sum(WolfMatrix[,200:400],na.rm=T) #115 detections over 200 days
 sum(WolfMatrix[,214:306],na.rm=T) #64 etections over 90 days
-sum(WolfMatrix[,254:345],na.rm=T) #64 etections over 90 days
+sum(WolfMatrix[,800:1101],na.rm=T) #64 etections over 90 days
 
 DayLookup[which(DayLookup$StudyDay==214),] # 22-May-2012
 DayLookup[which(DayLookup$StudyDay==254),] # 1-Jul-2012
 DayLookup[which(DayLookup$StudyDay==345),] # 30-Sept-2012
+DayLookup[which(DayLookup$StudyDay==1101),] # 26-Oct-2014
 
 Wolf2012 <- WolfMatrix[,254:345]
 
@@ -381,4 +382,5 @@ par(mar=c(3,3,6,6))
 plot(locs, pch="", xlim=c(range(locs[,-2])+c(-1000,1000)), ylim=c(range(locs[,-1])+c(-1000,1000)), main="Wolf Detections 1-July to 30-September 2012")
 spatial.plot(traplocs[notna.WO,c("UTME","UTMN")],y.WO,cx=1+sz*6,add=TRUE)
 dev.off()
+
 
