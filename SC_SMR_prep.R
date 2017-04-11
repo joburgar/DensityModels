@@ -16,10 +16,20 @@ setwd("C://Users/JBurgar/Documents/R/Analysis/DensityEstimation/BorealDeerProjec
 #                                                     #
 ###-------------------------------------------------###
 
+###--- Load appropriate packages
+library(plyr)		# for the "ddply" function
+library(reshape2)	# for formatting data frames
+library(dplyr)		# for applying functions to subsets of data frames
+library(ggplot2)	# for data visualization
+library(tidyr)		# for data formatting functions
+library(knitr)		# for the "kable" function for formatting tables
+
+
+####----- SETTING UP DATA FOR SMR - PARTIALLY MARKED POPULATION DENSITY ESTIMATION ------####
 ##---- load dataset with all Deer Project camera detections from Oct 2011 to Nov 2014 (updated in Feb 2015)
 # (made in DeerCamAnalysis.R)
 
-D <- read.csv("DeerCamAllDetectionsFeb2015.csv",header=T, row.names=1)
+D <- read.csv("C://Users/JBurgar/Documents/R/Analysis/DensityEstimation/BorealDeerProject/DeerCamAllDetectionsFeb2015.csv",header=T, row.names=1)
 summary(D)
 nrow(D)
 head(D)
@@ -48,11 +58,10 @@ D$StudyDay <- floor(as.numeric(difftime(D$Date.Time,min(D$Start),units="days")))
 summary(D$StudyDay)
 
 # import a csv with the study days and corresponding dates
-setwd("C://Users/JBurgar/Documents/R/Analysis/DensityEstimation/BorealDeerProject/DensityModels/")
-DayLookup <- read.csv("StudyDays.csv")
+DayLookup <- read.csv("C://Users/JBurgar/Documents/R/Analysis/DensityEstimation/BorealDeerProject/DensityModels/StudyDays.csv")
 
 ##---- camera station coordinates
-CamXY <- read.csv("CamXY.csv",row.names=1)
+CamXY <- read.csv("C://Users/JBurgar/Documents/R/Analysis/DensityEstimation/BorealDeerProject/DensityModels/CamXY.csv",row.names=1)
 summary(CamXY)
 
 
@@ -65,280 +74,19 @@ summary(D1)
 names(D1)
 
 ##--- Reduce to dataset with fewer variables
-## does the Total varible reflect group size???
-Ddt <- D1[c(1:3,5,8,10,23:26)]
-head(Ddt)
+Ddt <- D1[c(1:3,5,8,10,23,25,26)]
+glimpse(Ddt)
 summary(Ddt)
-nrow(Ddt)
-
-
-##--- Create "independent" detections with only 1 detection for sequences of species within 5 minutes elapsed time between successive images
-##--- Code adapted from Sandry (Nancy)
 D2 <-Ddt
-
-names(D2)
-D2min<-data.frame()
-
-for(site in unique(D2$Site)){
-  sitesub<-D2[D2$Site==site, ]
-  
-  for(species in unique(sitesub$Species)){
-    speciessub<-sitesub[sitesub$Species==species, ]
-    
-    for (date in unique(speciessub$Date)){
-      datesub<-speciessub[speciessub$Date==date, ]
-      
-      timepass <- c(60)                                                       # length of time in seconds
-      for (i in 2:length(datesub$Date.Time)) {
-        timepass <- c(timepass,datesub$Date.Time[i] - datesub$Date.Time[i-1]) 
-      }
-      
-      D2min <- rbind(D2min,datesub[timepass > 29,])                           # time between images in 1 min intervals - c(60)
-    }
-  }
-}
-
-length(unique(D2min$Site))
-length(unique(D2$Site))
-
-nrow(D2) ## original dataframe has 10168 rows
-nrow(D2min) ## aggregated dataframe has 3357 rows
-
-names(D2min)
-
-# add an event indicator of 1 for each of these hour-detections ("detection")
-D2min$detection <- 1
-
-##---- Create count matrix for species of interest
-	# Site x Occasion matrix of count of detections, with NAs for occasions when site (camera) was not active
-
-### Subset for particular species	
-  # NOTE: should try to streamline the code so only species name needs to be changed 
-    # (e.g. create function, or at least use standard variable names so not all need changing)
-
-## just need to update D2min$Species=="" to run for other species
-
-#Nsp <- D2min[which(D2min$Species=="blkbear"),]
-#Nsp <- D2min[which(D2min$Species=="caribou"),]
-#Nsp <- D2min[which(D2min$Species=="coyote"),]
-#Nsp <- D2min[which(D2min$Species=="moose"),]
-#Nsp <- D2min[which(D2min$Species=="lynx"),]
-#Nsp <- D2min[which(D2min$Species=="wolf"),]
-
-Nsp$Species <- factor(Nsp$Species)
-
-with(Nsp, table(StudyDay, detection))
-with(Nsp, table(Site, detection))
-
-length(unique(Nsp$StudyDay)) # 307 days with bear detections; 46 caribou; 500 coyote; 73 moose; 408 lynx; 345 wolf
-sum(Nsp$detection) # 605, the total number of "indepdendent" detections; 52 caribou; 837 coyote; 82 moose; 648 lynx; 501 wolf
-
-
-### use reshape2 package to create matrix of Site x StudyDay, with value being number of "indepdendent" detections
-  # currently independent is set to >5 min between elapsed images
-  # note that this could change if we change the count (event) definition
-  # this value could be considered both a Poisson (count) variable
-  # [or a binomial (trial) variable (X of 24 hours) - what would it be now that the event is per "indepdendent" detections?]
-
-  # useful reshape suggestions here: http://stackoverflow.com/questions/9617348/reshape-three-column-data-frame-to-matrix
-
-library(reshape2)
-
-# sum the number of independent-detections for each Site on each StudyDay (length would be same since Detection = 1)
-  # this creates dataframe, so Site is first column
-  # only includes sites and days with species detections
-
-Sp.tmp <- dcast(Nsp,Site~StudyDay,fun.aggregate = sum, value.var="detection",fill=0) 
-dim(Sp.tmp) ## 58 sites for 307 study days (bear); 12 for 47 (caribou); 58 for 501 (coyote); 38 for 74 (moose)
-            ## 60 for 409 (lynx); 57 for 346 (wolf)
-
-###--- need to add remaining sites with non-detections
-# specify Sites as rownames and drop Site column
-row.names(Sp.tmp) <- Sp.tmp$Site
-Sp.tmp <- Sp.tmp[,-1]
-
-# create SitexDay matrix of 0's for days and sites missing from species detections 
-  # to provide for complete coverage including days with no species detections
-  # identify which of study days are not in species dataframe
-study.days <- 1:max(D$StudyDay)
-Sp.missing <- study.days[-which(study.days %in% names(Sp.tmp))]
-Sp.zeros <- as.data.frame.matrix(matrix(0,nrow=length(unique(D$Site)),ncol=length(Sp.missing)))
-names(Sp.zeros)<- as.character(Sp.missing) # specify correct StudyDay column names
-row.names(Sp.zeros) <- unique(D$Site) # specify correct Site names
-
-# add all 0 rows for sites missing from Species detection dataframe
-  # make sure StudyDay (column) and Site (row) names are correctly specified
-Sp.tmp0 <- as.data.frame(matrix(0,ncol = length(Sp.tmp), nrow = nrow(Sp.zeros) - nrow(Sp.tmp)))
-names(Sp.tmp0) <- names(Sp.tmp)
-row.names(Sp.tmp0) <- row.names(Sp.zeros)[-which(row.names(Sp.zeros) %in% row.names(Sp.tmp))]
-Sp.tmp2 <- rbind(Sp.tmp,Sp.tmp0)
-  # sort rows correctly
-Sp.tmp2 <- Sp.tmp2[order(as.numeric(row.names(Sp.tmp2))),]
-dim(Sp.tmp2) ## 63 sites for 307 study days (bear); 63 for 46 (caribou); 63 for 500 (coyote); 63 for 73 (moose)
-              # 63 for 407 (lynx); 63 for 345 (wolf)
-
-# merge the detection and zero columns (dataframes) and sort by study day
-Sptmp <- data.frame(Sp.tmp2,Sp.zeros,check.names=FALSE)
-Sp.mat <- Sptmp[,order(as.numeric(names(Sptmp)))]
-
-# check sum of hour detections (against earlier sum for species, above)
-sum(Sp.mat) # 605 (bear), 52 (caribou), 837 (coyote) 82 (moose); 647 (lynx - missing one?); 501 (wolf)
-
-# drop Site 64 (row 63) since malfunctioned and lacked data (could do this earlier in code above) - is this for all species?
-Sp.mat <- Sp.mat[-63,]
-dim(Sp.mat)
-### Sp.mat is now a dataframe of 62 sites x 1101 days, with values representing count of indepdendent-detections each day
-
-### Now need to correct for days on which individual camera stations were not active 
-
-# Import matrix of camera sampling effort, indicating inactive days
-  # 1 = active, 0 = inactive
-
-effort <- read.csv("CameraTrapEffort.csv",row.names=1,check.names = FALSE)
-
-# Now replace values in species count matrix with NAs for inactive days
-  # first rename species matrix in case it doesn't work properly
-SpMatrix <- Sp.mat
-
-  # likely a more efficient way than using a For loop!
-
-for (SITE in 1:nrow(SpMatrix)) {
-  for (DAY in 1:ncol(SpMatrix)) {
-    SpMatrix[SITE,DAY] <- ifelse(effort[SITE,DAY] == 0, NA, SpMatrix[SITE,DAY])
-      } }
-
-
-sum(SpMatrix,na.rm=T) # 604, lost 1 detection at site 45 (removed due to tree obstruction, see previous notes)
-                      # 52 - no losses for caribou
-                      # 834 - 3 losses for coyote
-                      # 81 - 1 loss for moose
-                      # 607 - 40 (41?) losses for lynx
-                      # 501 - no losses for wolf
-
-### SpMatrix is the dataframe to use going forward - just need to change species at start of code and can rerun for all other species
-  # to have multiple matrixes in this workspace, rename for each species at this point
-
-#BBMatrix <- SpMatrix
-#write.csv(BBMatrix,"BBMatrix.csv")
-
-#CBMatrix <- SpMatrix
-#write.csv(CBMatrix,"Caribou_Matrix.csv")
-
-#COMatrix <- SpMatrix
-#write.csv(COMatrix,"Coyote_Matrix.csv")
-
-#MOMatrix <- SpMatrix
-#write.csv(MOMatrix,"Moose_Matrix.csv")
-
-#LYMatrix <- SpMatrix
-#write.csv(LYMatrix,"Lynx_Matrix.csv")
-
-#WOMatrix <- SpMatrix
-#write.csv(WOMatrix,"Wolf_Matrix.csv")
-
-###--- Need to check the data - does it include groups? Now treats summation of images within 5 min as "independent" events, does not include group size
-
-#SpMatrix <- read.csv("BBMatrix.csv",header=T, row.names=1)
-#SpMatrix <- read.csv("Caribou_Matrix.csv",header=T, row.names=1)
-#SpMatrix <- read.csv("Coyote_Matrix.csv",header=T, row.names=1)
-#SpMatrix <- read.csv("Moose_Matrix.csv",header=T, row.names=1)
-#SpMatrix <- read.csv("Lynx_Matrix.csv",header=T, row.names=1)
-#SpMatrix <- read.csv("Wolf_Matrix.csv",header=T, row.names=1)
-
-# some summaries on SpMatrix
-rowSums(SpMatrix,na.rm=T)
-sum(SpMatrix,na.rm=T) # total count = 604 (Bear); 52 (caribou); 834 (coyote); 81 (moose); 601 (lynx); 501 (wolf)
-dotchart(rowSums(SpMatrix,na.rm=T),pch=16,ylab="Camera Station",xlab="Total Species Count")
-barplot(sort(rowSums(SpMatrix,na.rm=T)))
-
-# TRAP DAYS
-sum(!is.na(SpMatrix)) # total = 60,937
-apply(SpMatrix,1,function(x) sum(!is.na(x)))
-summary(apply(SpMatrix,1,function(x) sum(!is.na(x))))
-plot(apply(SpMatrix,1,function(x) sum(!is.na(x))))
-dotchart(apply(SpMatrix,1,function(x) sum(!is.na(x))),cex=0.7,pch=16)
-  # may want to drop some stations like 33 (only 93 trap days), 34 (358 trap days)
-dotchart(apply(SpMatrix[-c(32,33),],1,function(x) sum(!is.na(x))),cex=0.7,pch=16)
-
-# ACTIVE CAMERAS PER DAY
-plot(apply(SpMatrix,2,function(x) sum(!is.na(x))), xlab= "Study Day", ylab= "Active Camera Stations",cex.lab=1.4)
-  # add lines for Jan 1 and Jul 1 each year
-abline("v"= c(72,254,438,619,803,984),col=c("blue","red"))
-summary(apply(SpMatrix,2,function(x) sum(!is.na(x))))
-
-# there is a good stretch with 60 cams from 27-Jan-12 (98) to 5-Jun-12 (228), but not good for deer because goes through high mortality and fawning
-# period around AESRD survey in Jan 2013 might be ok to start
-DayLookup[which(DayLookup$Date=="01-Dec-12"),]
-DayLookup[which(DayLookup$StudyDay==1322),]
-apply(SpMatrix,2,function(x) sum(!is.na(x)))[407:463]
-
-summary(DayLookup)
-
-## 3 bear "seasons" - 22-Apr-12 to 31-Oct-12; 02-Mar-13 to 20-Nov-13; 24-Apr-14 to 02-Oct-14
-## how to truncate the data? By first/last bear detection per season or by time of year (e.g. 1 March to 30 Nov)?
-
-DayLookup[which(DayLookup$StudyDay==184),] # first bear detection on 22-Apr-12
-DayLookup[which(DayLookup$StudyDay==376),] # no bear detections between 31-Oct-12 and 02-Mar-13
-DayLookup[which(DayLookup$StudyDay==498),]
-DayLookup[which(DayLookup$StudyDay==761),] # no bear detections between 20-Nov-13 and 24-Apr-14
-DayLookup[which(DayLookup$StudyDay==916),]
-DayLookup[which(DayLookup$StudyDay==1077),] # last bear detection 02-Oct-14
-
-## for bear, use by time of year and only run for first year
-DayLookup[which(DayLookup$Date=="01-Mar-12"),] # StudyDay 132
-DayLookup[which(DayLookup$Date=="30-Nov-12"),] # StudyDay 406
-
-DayLookup[which(DayLookup$Date=="01-Mar-13"),] # StudyDay 497
-DayLookup[which(DayLookup$Date=="30-Nov-13"),] # StudyDay 771
-
-DayLookup[which(DayLookup$Date=="01-Mar-14"),] # StudyDay 862
-DayLookup[which(DayLookup$Date=="30-Nov-14"),] # StudyDay 1136
-
-DayLookup[which(DayLookup$Date=="01-Jun-12"),] # StudyDay 224
-
-# ACTIVE CAMERAS PER DAY
-plot(apply(SpMatrix,2,function(x) sum(!is.na(x))), xlab= "Study Day", ylab= "Active Camera Stations",cex.lab=1.4)
-# add lines for Mar 1 and Nov 30 each year
-abline("v"= c(132,406,497,771, 862,1136),col=c("blue","red"))
-summary(apply(SpMatrix,2,function(x) sum(!is.na(x))))
-
-# add lines for caribou RAP
-abline("v"= c(117,268,483,633,848,998),col=c("blue","red"))
-
-### caribou timing periods
-# period around AEP caribou restricted activity period
-DayLookup[which(DayLookup$Date=="15-Feb-12"),] # start of RAP 2012 - 117
-DayLookup[which(DayLookup$Date=="15-Jul-12"),] # end of RAP 2012 - 268
-
-DayLookup[which(DayLookup$Date=="15-Feb-13"),] # start of RAP 2013 - 483
-DayLookup[which(DayLookup$Date=="15-Jul-13"),] # end of RAP 2013 - 633
-
-DayLookup[which(DayLookup$Date=="15-Feb-14"),] # start of RAP 2014 - 848
-DayLookup[which(DayLookup$Date=="15-Jul-14"),] # end of RAP 2014 - 998
-
-# add lines for moose RAP
-abline("v"= c(86,192,452,557,817,922),col=c("blue","red"))
-
-### moose timing periods
-# period around AEP ungulate restricted activity period
-DayLookup[which(DayLookup$Date=="15-Jan-12"),] # start of RAP 2012 - 86 
-DayLookup[which(DayLookup$Date=="30-Apr-12"),] # start of RAP 2012 - 192
-
-DayLookup[which(DayLookup$Date=="15-Jan-13"),] # start of RAP 2013 - 452 
-DayLookup[which(DayLookup$Date=="30-Apr-13"),] # start of RAP 2013 - 557
-
-DayLookup[which(DayLookup$Date=="15-Jan-14"),] # start of RAP 2014 - 817 
-DayLookup[which(DayLookup$Date=="30-Apr-14"),] # start of RAP 2014 - 922
-
-####----- SETTING UP DATA FOR SMR - PARTIALLY MARKED POPULATION DENSITY ESTIMATION ------####
 
 ##-- Detections of COLLARED individuals --## 
 
 Dcollar_all <- D2[grep("collar",D2$CommentsImages, ignore.case = TRUE),]
-table(Dcollar_all$Site, droplevels(Dcollar_all$Species))
+table(droplevels(Dcollar_all$Species))
 #blkbear caribou    wolf 
 #4       39      160 
 
+table(Dcollar_all$Site, droplevels(Dcollar_all$Species))
 #     blkbear caribou wolf
 #3        0       7   11
 #6        0       0    3
@@ -363,25 +111,242 @@ table(Dcollar_all$Site, droplevels(Dcollar_all$Species))
 #62       0      14    0
 #63       0       0    2
 
-summary(D2min)
 
-SMR_wolf <- D2min[which(D2min$Species=="wolf"),]
-head(SMR_wolf)
 
-Dcollar <- D2min[grep("collar",D2min$CommentsImages, ignore.case = TRUE),]
+SMR_wolf <- Dcollar_all[which(Dcollar_all$Species=="wolf"),]
 
-table(droplevels(Dcollar$Species))
-table(Dcollar$Site,droplevels(Dcollar$Species))
-#blkbear caribou    wolf 
-#1       9      27 
-
-#duplicated(Dcollar[which(Dcollar$Species=="wolf"),]$Date.Time) # no duplicates
-#names(Dcollar)
-
+SMR_wolf <- SMR_wolf[order(SMR_wolf$Site, SMR_wolf$Date.Time),]
 nrow(SMR_wolf)
-tail(SMR_wolf[order(SMR_wolf$CommentsImages),])
-tail(SMR_wolf[order(SMR_wolf$Site),])
 
-SMR_wolf <- SMR_wolf[order(SMR_wolf$Site),]
-SMR_wolf[400:445,1:6]
-SMR_wolf[350:445,1:6]
+head(SMR_wolf)
+tail(SMR_wolf)
+View(SMR_wolf)
+
+glimpse(SMR_wolf)
+SMR_wolf.sumSD <- SMR_wolf %>%
+  group_by(Site,StudyDay) %>%
+  summarise(count_camdet = length(File))
+
+SMR_wolf.sumSD <- SMR_wolf.sumSD[order(SMR_wolf.sumSD$Site, SMR_wolf.sumSD$StudyDay),]
+View(SMR_wolf.sumSD)
+min(SMR_wolf.sumSD$StudyDay)
+DayLookup[which(DayLookup$StudyDay==505),] # 09-Mar-13
+
+max(SMR_wolf.sumSD$StudyDay)
+DayLookup[which(DayLookup$StudyDay==1079),] # 04-Oct-14
+
+View(SMR_wolf.sumSD_01Jul_31Sep2013)
+SMR_wolf.sumSD_01Jul_31Sep2013 <- subset(SMR_wolf.sumSD,SMR_wolf.sumSD$StudyDay>619 & SMR_wolf.sumSD$StudyDay<710)
+glimpse(SMR_wolf.sumSD_01Jul_31Sep2013)
+unique(SMR_wolf.sumSD_01Jul_31Sep2013$Site) # 8 sites with collared wolves during overlap time 2013
+unique(SMR_wolf.sumSD_01Jul_31Sep2013$StudyDay) # 10 dates with collared wolves during overlap time 2013
+table(SMR_wolf.sumSD_01Jul_31Sep2013$Site,SMR_wolf.sumSD_01Jul_31Sep2013$StudyDay)
+
+sum(WolfMatrix[,505:1079],na.rm=T) #254 detections over time period of radio collaring
+
+
+sum(WolfMatrix[,254:345],na.rm=T) #115 detections over 91 days 2012 - used in SC models
+
+
+tail(DayLookup)
+DayLookup[which(DayLookup$StudyDay==1),] # 22-Oct-2011
+DayLookup[which(DayLookup$StudyDay==1079),] # 4-Oct-2014
+
+DayLookup[which(DayLookup$Date=="01-Jul-13"),] # 619
+DayLookup[which(DayLookup$Date=="30-Sep-13"),] # 710
+sum(WolfMatrix[,619:710],na.rm=T) #50 detections over 91 days 2013 - same dates as previous year used in SC models
+
+DayLookup[which(DayLookup$Date=="01-Jul-14"),] # 984
+DayLookup[which(DayLookup$Date=="30-Sep-14"),] # 1075
+sum(WolfMatrix[,984:1075],na.rm=T) #39 detections over 91 days 2013 - same dates as previous year used in SC models
+
+DayLookup[which(DayLookup$Date=="01-Nov-13"),] # 742
+DayLookup[which(DayLookup$Date=="31-Jan-14"),] # 833
+sum(WolfMatrix[,833:742],na.rm=T) #45 detections over 91 days 2013 - same dates as previous year used in SC models
+
+833-742
+
+wtel.matrix <- WolfMatrix[,619:710] #matrix of camera detections over same time period as collaring data
+
+wtel.matrix <- wtel.matrix[apply(wtel.matrix,1,function(x)!any(is.na(x))), , drop=F]
+sum(is.na(wtel.matrix)) # no NAs
+sum(wtel.matrix) # 50 detections
+dim(wtel.matrix) # 57 active cameras over 92 days
+complete.cases(WolfMatrix[,619:710]) ## rows 22,32,33,43,48
+62-5 #57 cameras
+plot(apply(wtel.matrix,2,function(x) sum(x)), xlab= "Study Day", ylab= "Daily Detections",cex.lab=1.4)
+
+###---- camera station coordinates
+summary(CamXY)
+
+# specify how much to buffer sites by (in 10km units, according to coord.scale)
+coord.scale <- 10000
+buffer <- 1 # 10 km unit buffer
+
+traplocs <- as.matrix(CamXY[, 2:3])           # 62 camera locations in this matrix
+X <- traplocs/coord.scale                     # 62 trap coords in 10 km units
+dim(X)
+
+###--- create xlims and ylims
+Xl <- min(X[, 1] - buffer)
+Xu <- max(X[, 1] + buffer)
+
+Yl <- min(X[, 2] - buffer)
+Yu <- max(X[, 2] + buffer)
+xlims <- c(Xl,Xu); ylims <- c(Yl,Yu)  
+
+area <- (Xu - Xl) * (Yu - Yl) # this is in units of 10 km * 10 km
+areakm2 <- (Xu - Xl)*(Yu - Yl)*100
+
+
+
+###--- Load in wolf telemetry points
+wolf.tel <- read.table("file:///C:/Users/JBurgar/Documents/ArcGIS/Projects/BorealDeer/SMR_RICC_wolf_UTMzn12.txt",header = TRUE, sep = ",")
+summary(wolf.tel)
+str(wolf.tel)
+glimpse(wolf.tel)
+head(wolf.tel$date_time)
+
+# create date_time in usable posix format
+wolf.tel$date <- as.character(substr(wolf.tel$date_time, 1,7))
+wolf.tel$time <- as.character(substr(wolf.tel$date_time, 9,13))
+
+wolf.tel$Date_POSIX <- as.POSIXct(strptime(wolf.tel$date, format = "%d%b%y"))
+wolf.tel$Time_POSIX <- as.POSIXct(strptime(wolf.tel$time, format = "%H:%M"))
+wolf.tel$Time_POSIX <- strftime(wolf.tel$Time_POSIX, format= "%H:%M")
+
+wolf.tel$dt_POSIX <- as.POSIXct(paste(wolf.tel$Date_POSIX, wolf.tel$Time_POSIX), format = "%Y-%m-%d %H:%M")
+wolf.tel$Year <- as.character(substr(wolf.tel$dt_POSIX,1,4))
+
+
+wolf.tel.sumY <- wolf.tel %>%
+  group_by(Animal_id, Year) %>%
+  summarise(count_telem = length(FID))
+
+wolf.tel.sumD <- wolf.tel %>%
+  group_by(Animal_id, Date_POSIX) %>%
+  summarise(count_telem = length(FID))
+table(wolf.tel.sumD$Animal_id, wolf.tel.sumD$count_telem)
+
+View(wolf.tel.sumY)
+
+###--- create subset of data to use - all dates that may overlap
+wtel <- subset(wolf.tel, wolf.tel$dt_POSIX < "2014-11-26 23:59:00")
+glimpse(wtel)
+
+wtel.sumY <- wtel %>%
+  group_by(Animal_id, Year) %>%
+  summarise(count_telem = length(FID))
+
+wtel.sumD <- wtel %>%
+  group_by(Animal_id, Date_POSIX) %>%
+  summarise(count_telem = length(FID))
+
+
+###--- create subset of wolf telemetry data to use - 01-July to 31-Sep 2013 overlap
+wtel2013 <- subset(wolf.tel, wolf.tel$Date_POSIX > "2013-06-30" & wolf.tel$Date_POSIX < "2013-10-01")
+
+glimpse(wtel2013)
+
+wtel2013.sum <- wtel2013 %>%
+  group_by(Animal_id) %>%
+  summarise(count_telem = length(FID))
+# 18 animals with collars during overlap time 2013
+
+###--- camdates - check with wtel2013 possibilities
+DayLookup[which(DayLookup$StudyDay==625),] # 07-Jul-13
+DayLookup[which(DayLookup$StudyDay==640),] # 22-Jul-13
+DayLookup[which(DayLookup$StudyDay==641),] # 23-Jul-13
+DayLookup[which(DayLookup$StudyDay==643),] # 25-Jul-13
+DayLookup[which(DayLookup$StudyDay==653),] # 04-Aug-13
+DayLookup[which(DayLookup$StudyDay==667),] # 08-Aug-13
+DayLookup[which(DayLookup$StudyDay==679),] # 30-Aug-13
+DayLookup[which(DayLookup$StudyDay==691),] # 11-Sep-13
+DayLookup[which(DayLookup$StudyDay==698),] # 18-Sep-13
+DayLookup[which(DayLookup$StudyDay==708),] # 28-Sep-13
+
+
+###--- create a subset of wolf telemetry data within 10 km of traps (buffered area)
+xlims; ylims
+
+names(wtel2013)
+wtel2013b <- wtel2013[c(1,2,4,11:13,15:17)]
+
+glimpse(wtel2013b)
+
+table(wtel2013b$Animal_id, wtel2013b$Sex)
+unique(wtel2013b$Animal_id)
+wtel2013b$x <- wtel2013b$UTME/coord.scale
+wtel2013b$y <- wtel2013b$UTMN/coord.scale
+
+wtel2013b <- subset(wtel2013b, wtel2013b$x>xlims[1] & wtel2013b$x<xlims[2] & wtel2013b$y>ylims[1] & wtel2013b$y<ylims[2])
+min(wtel2013b$x)
+min(wtel2013b$y)
+
+max(wtel2013b$x)
+max(wtel2013b$y)
+
+summary(wtel2013b)
+write.csv(wtel2013b, "wtel2013b.csv")
+
+###--- find any overlap between camera detections and telemetry locations
+SMR_wolf2013 <- subset(SMR_wolf, SMR_wolf$Date.Time > "2013-06-30 23:59:00" & SMR_wolf$Date.Time < "2013-10-01 00:01:00")
+str(SMR_wolf)
+
+
+SMR_wolf2013 <- SMR_wolf2013[order(SMR_wolf2013$Date.Time),]
+SMR_wolf2013[,2:4]
+nrow(SMR_wolf2013)
+
+# 07-Jul-13 10:30 AM detection at Site 30
+wtel2013b[which(wtel2013b$Date_POSIX=="2013-07-07" &
+                  wtel2013b$x>(X[30,1]-3) &
+                  wtel2013b$x<(X[60,1]+3) &
+                  wtel2013b$y>(X[60,2]-3) &
+                  wtel2013b$y<(X[60,2]+3)),]
+
+#FID Animal_id Sex   UTME    UTMN Date_POSIX  time Time_POSIX            dt_POSIX       x        y
+#54228 54227     W003F   M 499824 6177644 2013-07-07 05:03      05:03 2013-07-07 05:03:00 49.9824 617.7644
+#54229 54228     W003F   M 497073 6175786 2013-07-07 17:02      17:02 2013-07-07 17:02:00 49.7073 617.5786
+
+# likely W003F
+
+# 22-Jul-13  8:24 AM detection at Site 60
+wtel2013b[which(wtel2013b$Date_POSIX=="2013-07-22" &
+                  wtel2013b$x>(X[60,1]-3) &
+                  wtel2013b$x<(X[60,1]+3) &
+                  wtel2013b$y>(X[60,2]-3) &
+                  wtel2013b$y<(X[60,2]+3)),]
+
+#FID Animal_id Sex   UTME    UTMN Date_POSIX  time Time_POSIX            dt_POSIX       x        y
+#100537 100536     W012F   F 537816 6155415 2013-07-22 04:02      04:02 2013-07-22 04:02:00 53.7816 615.5415
+#136603 136602     W013D   F 530713 6160154 2013-07-22 01:00      01:00 2013-07-22 01:00:00 53.0713 616.0154
+# could be one of two animals...W012F, W013D
+
+
+# 23-Jul-13 12:12 AM detection at Site  9
+wtel2013b[which(wtel2013b$Date_POSIX=="2013-07-23"| wtel2013b$Date_POSIX=="2013-07-22" &
+                  wtel2013b$x>(X[9,1]-3) &
+                  wtel2013b$x<(X[9,1]+3) &
+                  wtel2013b$y>(X[9,2]-3) &
+                  wtel2013b$y<(X[9,2]+3)),]
+# could be one of nine animals...W003D, W003F, W004D, W004F, W005D, W007D, W012F, W013D, W015D - 3km buffer
+
+wtel2013b[which(wtel2013b$Date_POSIX=="2013-07-23"| wtel2013b$Date_POSIX=="2013-07-22" &
+                  wtel2013b$x>(X[9,1]-1) &
+                  wtel2013b$x<(X[9,1]+1) &
+                  wtel2013b$y>(X[9,2]-1) &
+                  wtel2013b$y<(X[9,2]+1)),]
+# could still be one of nine animals... 
+
+#25-Jul-13  9:53 AM detections at Site  51
+wtel2013b[which(wtel2013b$Date_POSIX=="2013-07-25" &
+                  wtel2013b$x>(X[51,1]-3.5) &
+                  wtel2013b$x<(X[51,1]+3.5) &
+                  wtel2013b$y>(X[51,2]-3.5) &
+                  wtel2013b$y<(X[51,2]+3.5)),]
+
+#FID Animal_id Sex   UTME    UTMN Date_POSIX  time Time_POSIX            dt_POSIX       x        y
+#54246 54245     W003F   M 507760 6170005 2013-07-25 05:03      05:03 2013-07-25 05:03:00 50.7760 617.0005
+#54247 54246     W003F   M 510356 6170945 2013-07-25 17:03      17:03 2013-07-25 17:03:00 51.0356 617.0945
+# likely W003F
