@@ -4,11 +4,12 @@ setwd("C://Users/JBurgar/Documents/R/Analysis/DensityEstimation/BorealDeerProjec
 library(xtable)
 library(coda)
 
-load("CAout13FL.RData")
-load("CAout13FL.ET.RData")
+load("WOout33FL.RData")
+load("WOout33FL.ET.RData")
 
+WOout33FL.ET
 
-out <- CAout13FL
+out <- WOout33FL
 
 nam<-c("sigma","lam0","psi", "N")
 nam<-match(nam,dimnames(out[[1]]$sims)[[2]])
@@ -33,9 +34,9 @@ s = summary(out.lst)
 gd = gelman.diag(out.lst)
 
 
-output_table <- rbind(CAout13FL = xtable(as.data.frame(t(s$statistics))),
-                      CAout13FL = xtable(as.data.frame(t(s$quantiles))),
-                      CAout13FL = xtable(as.data.frame(t(gd$psrf))))
+output_table <- rbind(WOout33FL = xtable(as.data.frame(t(s$statistics))),
+                      WOout33FL = xtable(as.data.frame(t(s$quantiles))),
+                      WOout33FL = xtable(as.data.frame(t(gd$psrf))))
 
 output_table <- autoformat(output_table, zap=3)
 
@@ -48,3 +49,4 @@ output_table <- autoformat(output_table, zap=3)
 write.table(output_table,
             file="C://Users/JBurgar/Documents/R/Analysis/DensityEstimation/BorealDeerProject/DensityModels/scRUN_modeloutput.txt",
             quote=FALSE, sep="\t", col.names=FALSE, append=TRUE)
+
