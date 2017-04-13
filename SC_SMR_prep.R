@@ -142,10 +142,14 @@ unique(SMR_wolf.sumSD_01Jul_31Sep2013$Site) # 8 sites with collared wolves durin
 unique(SMR_wolf.sumSD_01Jul_31Sep2013$StudyDay) # 10 dates with collared wolves during overlap time 2013
 table(SMR_wolf.sumSD_01Jul_31Sep2013$Site,SMR_wolf.sumSD_01Jul_31Sep2013$StudyDay)
 
+
+###--- upload WolfMatrix
+WolfMatrix <- read.csv("C://Users/JBurgar/Documents/R/Analysis/DensityEstimation/BorealDeerProject/DensityModels/Wolf_Matrix.csv",header=T, row.names=1)
+
 sum(WolfMatrix[,505:1079],na.rm=T) #254 detections over time period of radio collaring
 
 
-sum(WolfMatrix[,254:345],na.rm=T) #115 detections over 91 days 2012 - used in SC models
+sum(WolfMatrix[,254:345],na.rm=T) #64 detections over 91 days 2012 - used in SC models
 
 
 tail(DayLookup)
@@ -176,6 +180,8 @@ complete.cases(WolfMatrix[,619:710]) ## rows 22,32,33,43,48
 62-5 #57 cameras
 plot(apply(wtel.matrix,2,function(x) sum(x)), xlab= "Study Day", ylab= "Daily Detections",cex.lab=1.4)
 
+View(wtel.matrix)
+
 ###---- camera station coordinates
 summary(CamXY)
 
@@ -185,7 +191,19 @@ buffer <- 1 # 10 km unit buffer
 
 traplocs <- as.matrix(CamXY[, 2:3])           # 62 camera locations in this matrix
 X <- traplocs/coord.scale                     # 62 trap coords in 10 km units
-dim(X)
+
+# need to remove the 5 camera locations that weren't functional to keep the same as WolfMatrix
+
+X <- X[-48,]
+X <- X[-43,]
+X <- X[-33,]
+X <- X[-32,]
+X <- X[-22,]
+
+dim(X) #57 cameras, same as the encounter histories
+str(X)
+
+
 
 ###--- create xlims and ylims
 Xl <- min(X[, 1] - buffer)
@@ -196,7 +214,7 @@ Yu <- max(X[, 2] + buffer)
 xlims <- c(Xl,Xu); ylims <- c(Yl,Yu)  
 
 area <- (Xu - Xl) * (Yu - Yl) # this is in units of 10 km * 10 km
-areakm2 <- (Xu - Xl)*(Yu - Yl)*100
+areakm2 <- (Xu - Xl)*(Yu - Yl)*100 #6482 km2 (includes 10 km buffer)
 
 
 
